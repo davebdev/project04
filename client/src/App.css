@@ -9,6 +9,8 @@ html {
     text-align: center;
 }
 
+
+/* Neon code from here: https://css-tricks.com/how-to-create-neon-text-with-css/ */
 .neon {
     font-family: 'Neonderthaw', cursive;
     font-size: 15vh;
