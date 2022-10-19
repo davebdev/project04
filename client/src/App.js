@@ -5,26 +5,18 @@ import {
   Route
 } from "react-router-dom";
 import './App.css';
-import SaveTheDate from "./SaveTheDate"
+import SaveTheDate from "./SaveTheDate";
+import AdminLogin from "./AdminLogin";
 
 function App() {
   return (
     <BrowserRouter>
         <Routes>
             <Route path="" element={<SaveTheDate />} />
-            <Route path="invites" element={<Invite />} />
+            <Route path="admin/login" element={<AdminLogin />} />
         </Routes>
     </BrowserRouter>
   );
-}
-
-const testStyle = {
-    color: 'white',
-    textAlign: 'center'
-  };
-
-function Invite() {
-    return <h2 style={testStyle}>About</h2>;
 }
 
 export default App;

@@ -7,16 +7,19 @@ const port = process.env.PORT || 3001; // Note: using a different port to normal
 app.use(express.json());
 app.use(express.static("./client/build"));
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+// Controllers
+const adminController = require('./controllers/admin');
 
-app.get("/api/test", (req, res) => {
-  res.json({ result: "success" });
+// Middleware
+app.use((request, response, next) => {
+    console.log(`*** Request method: ${request.method} and route: ${request.path} at ${new Date()} ***`)
+    next();
 });
 
+// Routing
+app.use('/admin', adminController);
+
+// Used for unspecified routes
 app.get("*", (req, res) => {
     res.setHeader("content-type", "text/html");
     fs.createReadStream(`${__dirname}/client/build/index.html`).pipe(res);
