@@ -21,6 +21,8 @@ To try out the app, go to [https://wedding-mgr.herokuapp.com/](https://wedding-m
 ## Technologies
 
 
+[Twilio SendGrid](https://github.com/sendgrid/sendgrid-nodejs/tree/main/packages/mail) - used to send emails from the app
+
 
 ## Approach
 

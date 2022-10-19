@@ -1,0 +1,27 @@
+/* Neon code from here: https://css-tricks.com/how-to-create-neon-text-with-css/ */
+.pinkNeon {
+    font-family: 'Neonderthaw', cursive;
+    font-size: 10vh;
+    color: #fff;
+    text-shadow:
+      0 0 7px #fff,
+      0 0 10px #fff,
+      0 0 21px #fff,
+      0 0 42px #f0d,
+      0 0 82px #f0d,
+      0 0 92px #f0d,
+      0 0 102px #f0d,
+      0 0 151px #f0d;
+}
+
+.SaveTheDate {
+    text-align: center;
+    color: white;
+}
+
+.FbImage {
+    width: 50%;
+    max-height: max-content;
+    border-radius: 15px;
+    border: solid white 4px;
+}
