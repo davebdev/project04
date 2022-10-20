@@ -1,3 +1,30 @@
 .AdminLogin {
     color: white;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+}
+
+#login-heading {
+    grid-column: 2 / 3;
+    text-align: center;
+}
+
+#admin-login-form {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    display: flex;
+    flex-direction: column;
+}
+
+#admin-login-form > input {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#admin-login-form > button {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
 }

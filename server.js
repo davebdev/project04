@@ -2,13 +2,14 @@ const express = require("express");
 const fs = require("fs");
 const app = express();
 
-const port = process.env.PORT || 3001; // Note: using a different port to normal
+const port = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.static("./client/build"));
 
 // Controllers
 const adminController = require('./controllers/admin');
+const emailController = require('./controllers/email');
 
 // Middleware
 app.use((request, response, next) => {
@@ -18,6 +19,7 @@ app.use((request, response, next) => {
 
 // Routing
 app.use('/admin', adminController);
+app.use('/email', emailController);
 
 // Used for unspecified routes
 app.get("*", (req, res) => {
