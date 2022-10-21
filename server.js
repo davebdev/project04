@@ -1,6 +1,13 @@
 const express = require("express");
 const fs = require("fs");
 const app = express();
+// Dependancies
+const db = require('./database/db')
+// Express library to handle sessions
+const expressSession = require("express-session");
+
+// Store session in DB
+const pgSession = require("connect-pg-simple")(expressSession);
 
 const port = process.env.PORT || 3001;
 
@@ -16,6 +23,19 @@ app.use((request, response, next) => {
     console.log(`*** Request method: ${request.method} and route: ${request.path} at ${new Date()} ***`)
     next();
 });
+
+// Session middleware (using connect-pg-simple and express-session)
+app.use(
+    expressSession({
+        store: new pgSession({
+            pool: db,
+            createTableIfMissing: true,
+        }),
+        secret: process.env.EXPRESS_SESSION_SECRET_KEY,
+        resave: false,
+        saveUninitialized: false
+    })
+);
 
 // Routing
 app.use('/admin', adminController);
