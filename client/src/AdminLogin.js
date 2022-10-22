@@ -26,7 +26,9 @@ const AdminLogin = () => {
     useEffect(() => {
         axios.get('admin/authenticate')
         .then(res => {
-            setLoggedIn(res.data.loggedIn);
+            if (res.data[0]) {
+                setLoggedIn(true);
+            }
         })
     }, [loggedIn]);
 

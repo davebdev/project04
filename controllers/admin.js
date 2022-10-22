@@ -8,16 +8,17 @@ router.post("/", (request, response) => {
     const password = request.body.password;
     console.log(email);
     console.log(password);
-    Admin.checkEmailExists(email)
+    Admin.getAllAdminData(email)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
             return response.status(400).json({ message: 'The username and/or password you have entered is incorrect' })
         }
         const admin = dbRes.rows[0]
+        console.log(admin);
         const hashedPassword = admin.password;
         if (isValidPassword(password, hashedPassword)) {
-            request.session.email = admin.email;
-            return response.json({ id: admin.id });
+            request.session.email = request.body.email;
+            return response.json({ authenticated: 'success' });
         } else {
         return response.status(400).json({ message: 'The username and/or password you have entered is incorrect.' })
         }
@@ -35,7 +36,11 @@ router.get("/authenticate", (request, response) => {
             const expiryDate = new Date(dbRes.rows[0].expire);
             const currentDate = new Date();
             if (expiryDate.getTime() > currentDate.getTime()) {
-                return response.json({ loggedIn: true })
+                Admin.getAdminData(request.session.email)
+                .then(dbRes => {
+                    console.log(dbRes.rows[0]);
+                    return response.json(dbRes.rows[0])
+                });
             } else {
                 return response.json({ loggedIn: false })
             }
