@@ -5,6 +5,7 @@ import axios from 'axios';
 import AdminNav from './AdminNav';
 import ManageGuests from './ManageGuests';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import AdminInvite from './AdminInvite';
 
 const theme = createTheme({
   palette: {
@@ -24,6 +25,7 @@ const Admin = () => {
     const [userlname, setUserlname] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
     const [adminNav, setAdminNav] = useState('MANAGE GUESTS');
+    const [editInvite, setEditInvite] = useState(null);
 
     useEffect(() => {
         axios.get('admin/authenticate')
@@ -51,7 +53,8 @@ const Admin = () => {
             <ThemeProvider theme={theme}>
                 <div className="Admin">
                     <AdminNav logout={logout} fname={userfname} lname={userlname} setAdminNav={setAdminNav} theme={theme}/>
-                    {adminNav === 'MANAGE GUESTS' && <ManageGuests theme={theme}/>}
+                    {adminNav === 'MANAGE GUESTS' && <ManageGuests setAdminNav={setAdminNav} setEditInvite={setEditInvite} theme={theme}/>}
+                    {adminNav === 'EDIT INVITE' && <AdminInvite setAdminNav={setAdminNav} setEditInvite={setEditInvite} editInvite={editInvite} theme={theme}/>}
                 </div>
             </ThemeProvider>
         )
