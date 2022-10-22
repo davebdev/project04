@@ -3,12 +3,27 @@ import { useState, useEffect } from 'react';
 import { Navigate } from "react-router-dom";
 import axios from 'axios';
 import AdminNav from './AdminNav';
+import ManageGuests from './ManageGuests';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#000000',
+    },
+    secondary: {
+      main: '#7c4dff',
+    },
+  },
+});
+
 
 const Admin = () => {
     const [loggedIn, setLoggedIn] = useState(true);
     const [userfname, setUserfname] = useState(null);
     const [userlname, setUserlname] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
+    const [adminNav, setAdminNav] = useState('MANAGE GUESTS');
 
     useEffect(() => {
         axios.get('admin/authenticate')
@@ -33,9 +48,12 @@ const Admin = () => {
         return <Navigate replace to="/login" />;
       } else {
         return (
-            <div className="Admin">
-                <AdminNav logout={logout} fname={userfname} lname={userlname}/>
-            </div>
+            <ThemeProvider theme={theme}>
+                <div className="Admin">
+                    <AdminNav logout={logout} fname={userfname} lname={userlname} setAdminNav={setAdminNav} theme={theme}/>
+                    {adminNav === 'MANAGE GUESTS' && <ManageGuests theme={theme}/>}
+                </div>
+            </ThemeProvider>
         )
       }
 

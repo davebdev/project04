@@ -12,19 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#000000',
-    },
-    secondary: {
-      main: '#7c4dff',
-    },
-  },
-});
-
+import './AdminNav.css';
 
 const AdminNav = (props) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -61,14 +49,15 @@ const AdminNav = (props) => {
     }
 ];
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
+  const handleOpenNavMenu = (e) => {
+    setAnchorElNav(e.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+  const handleOpenUserMenu = (e) => {
+    setAnchorElUser(e.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (e) => {
+    props.setAdminNav(e.target.innerText);
     setAnchorElNav(null);
   };
 
@@ -77,8 +66,7 @@ const AdminNav = (props) => {
   };
 
   return (
-  <ThemeProvider theme={theme}>
-    <AppBar position="static">
+    <AppBar position="static" className="AdminNav">
       <Container maxWidth='lg'>
         <Toolbar disableGutters>
             <i className="fa-light fa-rings-wedding"></i>
@@ -162,7 +150,6 @@ const AdminNav = (props) => {
             </Toolbar>
         </Container>
     </AppBar>
-</ThemeProvider>
   );
 }
 

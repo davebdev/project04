@@ -19,9 +19,10 @@ CREATE TABLE IF NOT EXISTS admins (
 DROP TABLE IF EXISTS invites CASCADE;
 CREATE TABLE IF NOT EXISTS invites (
     id SERIAL PRIMARY KEY,
-    email TEXT UNIQUE,
+    primary_email TEXT UNIQUE,
     invite_status TEXT,
     logged_in_timestamp DATE,
+    logged_in_guest TEXT,
     comments TEXT
 );
 
@@ -31,7 +32,18 @@ CREATE TABLE IF NOT EXISTS guests (
     invite_id INT REFERENCES invites(id) ON DELETE CASCADE,
     fname TEXT,
     lname TEXT,
+    email TEXT UNIQUE,
     rsvp TEXT,
     dietary_reqs TEXT,
     age_bracket TEXT
+);
+
+DROP TABLE IF EXISTS emails CASCADE;
+CREATE TABLE IF NOT EXISTS emails (
+    id SERIAL PRIMARY KEY,
+    invite_id INT REFERENCES invites(id) ON DELETE CASCADE,
+    email_template TEXT,
+    send_status TEXT,
+    send_timestamp TEXT,
+    conent TEXT
 );

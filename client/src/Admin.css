@@ -1,6 +1,6 @@
 .Admin {
     color: white;
     display: grid;
-    grid-template-columns: auto;
+    grid-template-columns: repeat(7, 1fr);
     grid-template-rows: auto;
 }

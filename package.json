@@ -10,6 +10,7 @@
     "heroku-postbuild": "cd client && yarn && yarn build"
   },
   "dependencies": {
+    "@mui/x-data-grid": "^5.17.8",
     "@sendgrid/mail": "^7.7.0",
     "bcrypt": "^5.1.0",
     "connect-pg-simple": "^7.0.0",
