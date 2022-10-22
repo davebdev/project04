@@ -36,14 +36,6 @@ const AdminNav = (props) => {
         onclick: null
     },
     {
-        name: 'Account',
-        onclick: null
-    },
-    {
-        name: 'Dashboard',
-        onclick: null
-    },
-    {
         name: 'Logout',
         onclick: props.logout
     }

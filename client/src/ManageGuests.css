@@ -1,3 +1,7 @@
 .GuestGrid {
     grid-column: 2 / 7;
 }
+
+.GuestsColumnHeader {
+    overflow-wrap: break-word;
+}
