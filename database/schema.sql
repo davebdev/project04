@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS invites CASCADE;
 CREATE TABLE IF NOT EXISTS invites (
     id SERIAL PRIMARY KEY,
     primary_email TEXT UNIQUE,
-    invite_status TEXT,
+    invite_status TEXT DEFAULT 'To be invited',
     logged_in_timestamp DATE,
     logged_in_guest TEXT,
     comments TEXT
@@ -45,5 +45,5 @@ CREATE TABLE IF NOT EXISTS emails (
     email_template TEXT,
     send_status TEXT,
     send_timestamp TEXT,
-    conent TEXT
+    content TEXT
 );

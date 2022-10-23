@@ -18,6 +18,7 @@ app.use(express.static("./client/build"));
 const adminController = require('./controllers/admin');
 const emailController = require('./controllers/email');
 const guestController = require('./controllers/guest');
+const inviteController = require('./controllers/invite');
 
 // Middleware
 app.use((request, response, next) => {
@@ -42,6 +43,7 @@ app.use(
 app.use('/admin', adminController);
 app.use('/email', emailController);
 app.use('/guest', guestController);
+app.use('/invite', inviteController);
 
 // Used for unspecified routes
 app.get("*", (req, res) => {

@@ -25,7 +25,7 @@ const ManageGuests = (props) => {
             dietary_reqs: "-",
             email: "-",
             fname: "-",
-            id: 1,
+            id: 0,
             invite_id: null,
             invite_status: "-",
             lname: "-",
@@ -52,7 +52,8 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 90,
-              editable: true,
+              editable: false,
+              hide: true,
               headerClassName: 'GuestsColumnHeader'
             },
             {
@@ -61,7 +62,7 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 150,
-              editable: true,
+              editable: false,
               headerClassName: 'GuestsColumnHeader'
             },
             {
@@ -70,7 +71,7 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 150,
-              editable: true,
+              editable: false,
               headerClassName: 'GuestsColumnHeader'
             },
             {
@@ -79,8 +80,17 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 200,
-              editable: true,
+              editable: false,
               headerClassName: 'GuestsColumnHeader'
+            },
+            {
+                field: 'primary_email',
+                headerName: 'Primary email',
+                headerAlign: 'left',
+                align: 'left',
+                width: 200,
+                editable: false,
+                headerClassName: 'GuestsColumnHeader'
             },
             {
               field: 'rsvp',
@@ -88,7 +98,7 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 90,
-              editable: true,
+              editable: false,
             },
             {
               field: 'age_bracket',
@@ -96,7 +106,7 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 110,
-              editable: true,
+              editable: false,
               headerClassName: 'GuestsColumnHeader'
             },
             {
@@ -105,17 +115,7 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 300,
-              editable: true,
-              headerClassName: 'GuestsColumnHeader'
-            },
-            {
-              field: 'primary_email',
-              headerName: 'Primary email',
-              headerAlign: 'left',
-              align: 'left',
-              width: 200,
-              editable: true,
-              hide: true,
+              editable: false,
               headerClassName: 'GuestsColumnHeader'
             },
             {
@@ -124,7 +124,7 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 100,
-              editable: true,
+              editable: false,
               hide: true,
               headerClassName: 'GuestsColumnHeader'
             },
@@ -135,7 +135,7 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 100,
-              editable: true,
+              editable: false,
               hide: true,
               headerClassName: 'GuestsColumnHeader'
             },
@@ -145,7 +145,7 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 200,
-              editable: true,
+              editable: false,
               hide: true,
               headerClassName: 'GuestsColumnHeader'
             },
@@ -155,7 +155,7 @@ const ManageGuests = (props) => {
               headerAlign: 'left',
               align: 'left',
               width: 300,
-              editable: true,
+              editable: false,
               headerClassName: 'GuestsColumnHeader'
             },
             {
@@ -171,7 +171,7 @@ const ManageGuests = (props) => {
                       props.setEditInvite(params.row.invite_id);
                       props.setAdminNav('EDIT INVITE');
                   }
-                  return <Button onClick={redirectToEdit}>EDIT INVITE</Button>;
+                  return <Button variant="outlined" onClick={redirectToEdit}>EDIT INVITE</Button>;
               },
               headerClassName: 'GuestsColumnHeader'
             },
@@ -188,18 +188,20 @@ const ManageGuests = (props) => {
 
   return (
     <ThemeProvider theme={theme}>
-        <Box className="GuestGrid" sx={{height: '80vh', width: '90vw'}}>
-        <DataGrid
-            components={{ Toolbar: GridToolbar }}
-            rows={rows}
-            columns={columns}
-            pageSize={25}
-            rowsPerPageOptions={[25]}
-            checkboxSelection
-            disableSelectionOnClick
-            experimentalFeatures={{ newEditingApi: true }}
-            sx={{ backgroundColor: '#F3f3f3'}}
-        />
+        <Box className="GuestGrid" sx={{height: '80vh', width: '90vw', display: 'flex'}}>
+            <div style={{ flexGrow: 1 }}>
+                <DataGrid
+                    components={{ Toolbar: GridToolbar }}
+                    rows={rows}
+                    columns={columns}
+                    pageSize={25}
+                    rowsPerPageOptions={[25]}
+                    checkboxSelection={false}
+                    disableSelectionOnClick
+                    experimentalFeatures={{ newEditingApi: true }}
+                    sx={{ backgroundColor: '#F3f3f3'}}
+                />
+            </div>
         </Box>
     </ThemeProvider>
   );

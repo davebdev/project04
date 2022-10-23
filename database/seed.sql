@@ -9,9 +9,9 @@ INSERT INTO admins(email, password, fname, lname) VALUES
 ('tysondonnelly@gmail.com', '$2b$10$FbO8/bULrdH.OL1Hc8U3d.F4Mg88Qvahrmj0YUMe2PoIYRH4KQFPa', 'Tyson', 'Donnelly');
 
 TRUNCATE invites restart identity cascade;
-INSERT INTO invites(primary_email, invite_status, logged_in_timestamp, logged_in_guest, comments) VALUES
-('guest1@ga.com', null, null, null, null),
-('guest4@ga.com', null, null, null, null);
+INSERT INTO invites(primary_email, logged_in_timestamp, logged_in_guest, comments) VALUES
+('guest1@ga.com', null, null, null),
+('guest4@ga.com', null, null, null);
 
 
 TRUNCATE guests restart identity cascade;
