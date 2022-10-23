@@ -24,13 +24,22 @@ const EditToolbar = (props) => {
     const { setRows, setRowModesModel, inviteDetails } = props;
 
     const handleClick = () => {
-        // create new guest row attached to invite
-      const id = 0;
-      setRows((oldRows) => [...oldRows, { id, invite_id: inviteDetails.invite_id, fname: '', lname: '', email: '', rsvp: '', dietary_reqs: '', age_bracket: 'A',  isNew: true }]);
-      setRowModesModel((oldModel) => ({
-        ...oldModel,
-        [id]: { mode: GridRowModes.Edit, fieldToFocus: 'fname' },
-      }));
+        const inviteId = inviteDetails.id.toString();
+        const form = new FormData();
+        form.append("invite_id", inviteId);
+        const data = {
+            invite_id: form.get('invite_id')
+        }
+        axios.post('/guest', data)
+        .then(dbRes => {
+            const id = dbRes.data[0].id;
+            console.log("row id:", id);
+            setRows((oldRows) => [...oldRows, { id, invite_id: inviteDetails.id, fname: '', lname: '', email: '', rsvp: '', dietary_reqs: '', age_bracket: 'A',  isNew: true }]);
+            setRowModesModel((oldModel) => ({
+              ...oldModel,
+              [id]: { mode: GridRowModes.Edit, fieldToFocus: 'fname' },
+            }));
+        })
     };
 
     return (
@@ -96,7 +105,8 @@ const AdminInvite = (props) => {
       };
 
       const processRowUpdate = (newRow) => {
-        console.log("processRowUpdate new row: ", newRow);
+        axios.put("/guest", newRow)
+        .then(dbRes => dbRes);
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
         return updatedRow;
@@ -216,7 +226,7 @@ const AdminInvite = (props) => {
           setRows(dbRes.data.guests);
           setInviteDetails(dbRes.data.invite[0]);
       })
-  }, [])
+  }, [rowModesModel])
 
     return (
         <ThemeProvider theme={theme}>
@@ -264,6 +274,7 @@ const AdminInvite = (props) => {
                     onRowEditStart={handleRowEditStart}
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
+                    onProcessRowUpdateError={(error) => console.log(error)}
                     pageSize={3}
                     rowsPerPageOptions={[3]}
                     checkboxSelection={false}
