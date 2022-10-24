@@ -62,4 +62,21 @@ router.put("/", (request, response) => {
     })
 })
 
+router.delete("/:id", (request, response) => {
+    const sid = request.sessionID;
+    const rowId = request.params.id;
+    Admin.checkSessionMatches(sid)
+    .then(dbRes => {
+        if (dbRes.rowCount === 0) {
+            return response.json({ loggedIn: false })
+        } else {
+            Guest.deleteGuestRow(rowId)
+            .then(() => {
+                return response.json({ message: 'delete successful' });
+            })
+            .catch(err => response.status(500).json({error: err}));
+        }
+    })
+})
+
 module.exports = router;

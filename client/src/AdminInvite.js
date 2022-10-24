@@ -69,6 +69,11 @@ const AdminInvite = (props) => {
       ]);
     const [inviteDetails, setInviteDetails] = useState({invite_id: props.editInvite})
     const [rowModesModel, setRowModesModel] = useState({});
+    const [update, setUpdate] = useState(false);
+
+    const forceUpdate = () => {
+        setUpdate(!update);
+    }
 
     const handleRowEditStart = (params, event) => {
         event.defaultMuiPrevented = true;
@@ -89,10 +94,17 @@ const AdminInvite = (props) => {
       };
 
       const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+        axios.delete(`/guest/${id}`)
+        .then(dbRes => {
+            console.log('deleted ok client side')
+            forceUpdate();
+        })
+        // delete row from db then use forceUpdate() to update page
+        // setRows(rows.filter((row) => row.id !== id))
       };
 
       const handleCancelClick = (id) => () => {
+        // check if row is a new row, if so delete from db
         setRowModesModel({
           ...rowModesModel,
           [id]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -226,7 +238,7 @@ const AdminInvite = (props) => {
           setRows(dbRes.data.guests);
           setInviteDetails(dbRes.data.invite[0]);
       })
-  }, [rowModesModel])
+  }, [rowModesModel, update])
 
     return (
         <ThemeProvider theme={theme}>

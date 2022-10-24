@@ -37,6 +37,13 @@ const Guest  = {
         return db.query(sql, [row.fname, row.lname, row.email, row.rsvp, row.dietary_reqs, row.age_bracket, row.id])
         .then(dbRes => dbRes)
         .catch(err => console.log(err));
+    },
+    deleteGuestRow: (rowId) => {
+        const sql = `DELETE FROM guests
+        WHERE id=$1;`;
+        return db.query(sql, [rowId])
+        .then(dbRes => dbRes)
+        .catch(err => console.log(err));
     }
 }
 
