@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SaveTheDate from "./SaveTheDate";
 import GuestNav from "./GuestNav";
 import Rsvp from "./Rsvp";
@@ -10,7 +10,7 @@ function App() {
     const [guestLoggedIn, setGuestLoggedIn] = useState(false);
 
     const logout = (e) => {
-        axios.delete('/session')
+        axios.delete('/guest/session')
         .then(() => {
             localStorage.clear();
             setGuestLoggedIn(false);
@@ -28,6 +28,15 @@ function App() {
           },
         },
       });
+
+      useEffect(() => {
+        axios.get('/guest/authenticate')
+        .then(res => {
+            if (res.data[0]) {
+                setGuestLoggedIn(true);
+            }
+        })
+    }, []);
 
   return (
     <div className="App">

@@ -12,12 +12,12 @@ const msg = {
     html: '<p>Can you let me know if this <strong>comes through?</strong><br>Thanks beautiful! x</p>',
   }
 
-router.post("/send", (req, res) => {
+router.post("/send", (request, response) => {
 sgMail
   .send(msg)
   .then(() => {
-    res.json({
-        "email" : "sent"
+    response.status(201).json({
+        "infoMessage" : "Email has been sent"
     })
   })
   .catch((error) => {

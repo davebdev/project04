@@ -22,7 +22,7 @@ const Rsvp = (props) => {
     }
 
     useEffect(() => {
-        axios.get('session/authenticate')
+        axios.get('/guest/authenticate')
         .then(res => {
             if (res.data[0]) {
                 setGuestLoggedIn(true);

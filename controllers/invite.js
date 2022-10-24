@@ -10,25 +10,37 @@ router.get("/:id", (request, response) => {
     Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
-            return response.json({ loggedIn: false })
+            return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
         } else {
-            const results = {}
-            Invite.getInviteInfo(invite_id)
-            .then(dbRes => {
-                if (dbRes.rowCount === 0) {
-                    return response.json({ errorMessage: 'No invitation with that id' })
-                } else {
-                    results.invite = dbRes.rows;
-                    Guest.getInviteGuestInfo(invite_id)
+            const user = request.session.user;
+            const expiryDate = new Date(dbRes.rows[0].expire);
+            const currentDate = new Date();
+            if (expiryDate.getTime() > currentDate.getTime()) {
+                if (user === 'guest') {
+                    return response.status(400).json({ errorMessage: "User currently logged in as Guest. User must be an admin to view this page."})
+                } else if (user === 'admin') {
+                    const results = {}
+                    Invite.getInviteInfo(invite_id)
                     .then(dbRes => {
-                        results.guests = dbRes.rows;
-                        return response.json(results);
+                        if (dbRes.rowCount === 0) {
+                            return response.json({ errorMessage: "No invitation with that id" })
+                        } else {
+                            results.invite = dbRes.rows;
+                            Guest.getInviteGuestInfo(invite_id)
+                            .then(dbRes => {
+                                results.guests = dbRes.rows;
+                                return response.status(200).json(results);
+                            })
+                            .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
+                        }
                     })
                 }
-            })
-            .catch(err => response.status(500).json({error: err}));
+            } else {
+                return response.status(440).json({errorMessage: "Your session has expired. Please login again."})
+            }
         }
     })
+    .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
 });
 
 module.exports = router;
