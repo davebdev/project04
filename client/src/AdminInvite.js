@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { DataGrid, GridToolbar, GridRowModes, GridToolbarContainer, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridRowModes, GridToolbarContainer, GridActionsCellItem, GridCellParams } from '@mui/x-data-grid';
 import './AdminInvite.css';
 import { Input, Button, Box } from '@mui/material';
 
@@ -21,7 +21,7 @@ const theme = createTheme({
 // CRUD functionality code adapted from https://mui.com/x/react-data-grid/editing/#full-featured-crud-component
 
 const EditToolbar = (props) => {
-    const { setRows, setRowModesModel, inviteDetails } = props;
+    const { setRows, setRowModesModel, setNewRow, inviteDetails } = props;
 
     const handleClick = () => {
         const inviteId = inviteDetails.id.toString();
@@ -34,6 +34,7 @@ const EditToolbar = (props) => {
         .then(dbRes => {
             const id = dbRes.data[0].id;
             console.log("row id:", id);
+            setNewRow({rowId: id});
             setRows((oldRows) => [...oldRows, { id, invite_id: inviteDetails.id, fname: '', lname: '', email: '', rsvp: '', dietary_reqs: '', age_bracket: 'A',  isNew: true }]);
             setRowModesModel((oldModel) => ({
               ...oldModel,
@@ -69,6 +70,7 @@ const AdminInvite = (props) => {
       ]);
     const [inviteDetails, setInviteDetails] = useState({invite_id: props.editInvite})
     const [rowModesModel, setRowModesModel] = useState({});
+    const [newRow, setNewRow] = useState({rowId: null});
     const [update, setUpdate] = useState(false);
 
     const forceUpdate = () => {
@@ -90,29 +92,32 @@ const AdminInvite = (props) => {
       };
 
       const handleSaveClick = (id) => (e) => {
+        setNewRow({rowId: null});
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
       };
 
       const handleDeleteClick = (id) => () => {
         axios.delete(`/guest/${id}`)
-        .then(dbRes => {
-            console.log('deleted ok client side')
+        .then(() => {
             forceUpdate();
         })
-        // delete row from db then use forceUpdate() to update page
-        // setRows(rows.filter((row) => row.id !== id))
       };
 
       const handleCancelClick = (id) => () => {
-        // check if row is a new row, if so delete from db
-        setRowModesModel({
-          ...rowModesModel,
-          [id]: { mode: GridRowModes.View, ignoreModifications: true },
-        });
-
-        const editedRow = rows.find((row) => row.id === id);
-        if (editedRow.isNew) {
-          setRows(rows.filter((row) => row.id !== id));
+        if (newRow.rowId === id) {
+            axios.delete(`/guest/${id}`)
+            .then(dbRes => {
+                console.log('deleted ok client side')
+                setRowModesModel({
+                    ...rowModesModel,
+                    [id]: { mode: GridRowModes.View, ignoreModifications: true },
+                  });
+            })
+        } else {
+            setRowModesModel({
+                ...rowModesModel,
+                [id]: { mode: GridRowModes.View, ignoreModifications: true },
+              });
         }
       };
 
@@ -215,7 +220,7 @@ const AdminInvite = (props) => {
 
               return [
                 <GridActionsCellItem
-                  icon={<i className="fa-thin fa-pen-to-square"></i>}
+                  icon={<i className="fa-light fa-pen-to-square"></i>}
                   label="Edit"
                   className="textPrimary"
                   onClick={handleEditClick(id)}
@@ -275,7 +280,7 @@ const AdminInvite = (props) => {
                         Toolbar: EditToolbar,
                         }}
                     componentsProps={{
-                        toolbar: { setRows, setRowModesModel, inviteDetails },
+                        toolbar: { setRows, setRowModesModel, setNewRow, inviteDetails },
                         }}
                     experimentalFeatures={{ newEditingApi: true }}
                     rows={rows}
