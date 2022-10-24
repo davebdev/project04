@@ -4,3 +4,10 @@ html {
     background-position: center center;
     background-repeat: no-repeat;
 }
+
+.App {
+    color: white;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: auto;
+}

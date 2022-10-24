@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(express.static("./client/build"));
 
 // Controllers
+const sessionController = require('./controllers/session');
 const adminController = require('./controllers/admin');
 const emailController = require('./controllers/email');
 const guestController = require('./controllers/guest');
@@ -40,6 +41,7 @@ app.use(
 );
 
 // Routing
+app.use('/session', sessionController);
 app.use('/admin', adminController);
 app.use('/email', emailController);
 app.use('/guest', guestController);

@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Admin = require('../models/admin');
 const Guest = require('../models/guest');
 const Invite = require('../models/invite');
+const Session = require('../models/session');
 
 router.get("/:id", (request, response) => {
     const sid = request.sessionID;
     const invite_id = request.params.id;
-    Admin.checkSessionMatches(sid)
+    Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
             return response.json({ loggedIn: false })

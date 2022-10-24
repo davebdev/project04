@@ -1,12 +1,11 @@
-const { response } = require('express');
 const express = require('express');
 const router = express.Router();
-const Admin = require('../models/admin');
+const Session = require('../models/session');
 const Guest = require('../models/guest');
 
 router.get("/all", (request, response) => {
     const sid = request.sessionID;
-    Admin.checkSessionMatches(sid)
+    Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
             return response.json({ loggedIn: false })
@@ -20,10 +19,25 @@ router.get("/all", (request, response) => {
     })
 });
 
+router.post("/login", (request, response) => {
+    const email = request.body.email;
+    Guest.getGuestInfo(email)
+    .then(dbRes => {
+        if (dbRes.rowCount === 0) {
+            return response.status(400).json({ message: 'That email address wasn\'t found on our list. Please try another email or contact us directly to RSVP.' })
+        } else {
+            request.session.email = email;
+            request.session.user = 'guest';
+            return response.json({ authenticated: 'success' });
+        }
+    })
+    .catch(() => response.sendStatus(500));
+})
+
 router.post("/", (request, response) => {
     const sid = request.sessionID;
     const invite_id = request.body.invite_id;
-    Admin.checkSessionMatches(sid)
+    Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
             return response.json({ loggedIn: false })
@@ -48,7 +62,7 @@ router.put("/", (request, response) => {
         dietary_reqs: request.body.dietary_reqs,
         age_bracket: request.body.age_bracket
     }
-    Admin.checkSessionMatches(sid)
+    Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
             return response.json({ loggedIn: false })
@@ -65,7 +79,7 @@ router.put("/", (request, response) => {
 router.delete("/:id", (request, response) => {
     const sid = request.sessionID;
     const rowId = request.params.id;
-    Admin.checkSessionMatches(sid)
+    Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
             return response.json({ loggedIn: false })

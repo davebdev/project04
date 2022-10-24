@@ -28,7 +28,7 @@ const Admin = () => {
     const [editInvite, setEditInvite] = useState(null);
 
     useEffect(() => {
-        axios.get('admin/authenticate')
+        axios.get('session/authenticate')
         .then(res => {
             console.log(res);
             setLoggedIn(true);
@@ -39,7 +39,7 @@ const Admin = () => {
       }, [loggedIn]);
 
       const logout = (e) => {
-        axios.delete('admin/session')
+        axios.delete('/session')
         .then(() => {
             localStorage.clear();
             setLoggedIn(false);

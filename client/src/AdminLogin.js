@@ -13,7 +13,7 @@ const AdminLogin = () => {
             email: formData.get('email'),
             password: formData.get('password')
         };
-        axios.post('/admin', data)
+        axios.post('/admin/login', data)
         .then((dbRes) => {
             setLoggedIn(true);
         })
@@ -24,7 +24,7 @@ const AdminLogin = () => {
     }
 
     useEffect(() => {
-        axios.get('admin/authenticate')
+        axios.get('session/authenticate')
         .then(res => {
             if (res.data[0]) {
                 setLoggedIn(true);
