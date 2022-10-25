@@ -1,6 +1,6 @@
 import './SaveTheDate.css';
-
-import * as React from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -66,7 +66,19 @@ const relationshipEvents = [
     }
 ]
 
-const SaveTheDate = () => {
+const SaveTheDate = (props) => {
+    const { setGuestLoggedIn } = props;
+
+    useEffect(() => {
+        axios.get('/guest/authenticate')
+        .then(response => {
+            console.log(response)
+            if (response.data[0]) {
+                setGuestLoggedIn(true);
+            }
+        })
+    }, []);
+
     return (
     <div className="SaveTheDate">
     <p className="pinkNeon"><i className="fa-thin fa-rings-wedding fa-2xs"></i> Save the date!</p>

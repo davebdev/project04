@@ -31,8 +31,9 @@ function App() {
 
       useEffect(() => {
         axios.get('/guest/authenticate')
-        .then(res => {
-            if (res.data[0]) {
+        .then(response => {
+            console.log(response);
+            if (response.data.email) {
                 setGuestLoggedIn(true);
             }
         })
@@ -42,7 +43,7 @@ function App() {
     <div className="App">
         <ThemeProvider theme={theme}>
             <GuestNav setGuestNav={setGuestNav} guestLoggedIn={guestLoggedIn}/>
-            {guestNav === 'SAVE THE DATE' && <SaveTheDate />}
+            {guestNav === 'SAVE THE DATE' && <SaveTheDate setGuestLoggedIn={setGuestLoggedIn} />}
             {guestNav === 'RSVP' && <Rsvp setGuestLoggedIn={setGuestLoggedIn} guestLoggedIn={guestLoggedIn}/>}
             {guestNav === 'ON THE DAY' && <p>ON THE DAY</p>}
             {guestNav === 'TRAVEL & ACCOMM' && <p>TRAVEL & ACCOMM</p>}
