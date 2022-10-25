@@ -66,19 +66,7 @@ const relationshipEvents = [
     }
 ]
 
-const SaveTheDate = (props) => {
-    const { setGuestLoggedIn } = props;
-
-    useEffect(() => {
-        axios.get('/guest/authenticate')
-        .then(response => {
-            console.log(response)
-            if (response.data[0]) {
-                setGuestLoggedIn(true);
-            }
-        })
-    }, []);
-
+const SaveTheDate = () => {
     return (
     <div className="SaveTheDate">
     <p className="pinkNeon"><i className="fa-thin fa-rings-wedding fa-2xs"></i> Save the date!</p>

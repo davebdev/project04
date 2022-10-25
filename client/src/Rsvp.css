@@ -6,6 +6,10 @@
     grid-template-rows: auto;
 }
 
+.rsvpContent {
+    grid-column: 1 / 4;
+}
+
 #login-heading {
     grid-column: 2 / 3;
     text-align: center;
@@ -28,4 +32,25 @@
     margin: 10px;
     padding: 10px;
     border-radius: 5px;
+}
+
+/* .rsvpContent {
+    background-color: grey;
+    color: grey;
+    border-radius: 7px;
+} */
+
+.MuiGrid-root {
+    color: white;
+    text-align: center;
+}
+
+.MuiSvgIcon-root {
+    color: white;
+}
+
+.guestDetails {
+    border: 2px solid white;
+    border-radius: 10px;
+    margin: 20px 0;
 }

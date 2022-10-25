@@ -8,12 +8,18 @@ import axios from "axios";
 function App() {
     const [guestNav, setGuestNav] = useState('SAVE THE DATE');
     const [guestLoggedIn, setGuestLoggedIn] = useState(false);
+    const [loggedInData, setLoggedInData] = useState(null);
+    const [guestData, setGuestData] = useState(null);
+    const [rsvpAcknowledgement, setRsvpAcknowledgement] = useState(false);
 
     const logout = (e) => {
         axios.delete('/guest/session')
         .then(() => {
             localStorage.clear();
             setGuestLoggedIn(false);
+            setLoggedInData(null);
+            setGuestData(null);
+            setRsvpAcknowledgement(false);
             setGuestNav('SAVE THE DATE');
         })
       }
@@ -34,17 +40,23 @@ function App() {
         .then(response => {
             console.log(response);
             if (response.data.email) {
-                setGuestLoggedIn(true);
+                setLoggedInData(response.data);
+                axios.get('/guest')
+                .then(response => {
+                    setGuestData(response.data);
+                    setGuestLoggedIn(true);
+            })
+            .catch(err => console.log(err));
             }
         })
-    }, []);
+    }, [guestLoggedIn]);
 
   return (
     <div className="App">
         <ThemeProvider theme={theme}>
             <GuestNav setGuestNav={setGuestNav} guestLoggedIn={guestLoggedIn}/>
-            {guestNav === 'SAVE THE DATE' && <SaveTheDate setGuestLoggedIn={setGuestLoggedIn} />}
-            {guestNav === 'RSVP' && <Rsvp setGuestLoggedIn={setGuestLoggedIn} guestLoggedIn={guestLoggedIn}/>}
+            {guestNav === 'SAVE THE DATE' && <SaveTheDate />}
+            {guestNav === 'RSVP' && <Rsvp setGuestLoggedIn={setGuestLoggedIn} guestLoggedIn={guestLoggedIn} loggedInData={loggedInData} guestData={guestData} setGuestData={setGuestData} rsvpAcknowledgement={rsvpAcknowledgement} setRsvpAcknowledgement={setRsvpAcknowledgement}/>}
             {guestNav === 'ON THE DAY' && <p>ON THE DAY</p>}
             {guestNav === 'TRAVEL & ACCOMM' && <p>TRAVEL & ACCOMM</p>}
             {guestNav === 'FAQS' && <p>FAQS</p>}
