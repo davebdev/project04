@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { isValidPassword } = require('../util/hash');
 const Admin = require('../models/admin');
+const Session = require('../models/session');
 
 router.get("/authenticate", (request, response) => {
     const sid = request.sessionID;
     Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
-            return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
+            return response.json({errorMessage: "You are currently not logged in. Please login to view this page."})
         } else {
             const user = request.session.user;
             const expiryDate = new Date(dbRes.rows[0].expire);
@@ -35,7 +36,7 @@ router.delete("/session", (request, response) => {
     Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
-            return response.status(401).json({errorMessage: "You are currently not logged in."})
+            return response.json({errorMessage: "You are currently not logged in."})
         } else {
             const user = request.session.user;
             const expiryDate = new Date(dbRes.rows[0].expire);

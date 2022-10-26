@@ -122,6 +122,7 @@ const AdminInvite = (props) => {
       };
 
       const processRowUpdate = (newRow) => {
+        console.log(newRow)
         axios.put("/guest", newRow)
         .then(dbRes => dbRes);
         const updatedRow = { ...newRow, isNew: false };

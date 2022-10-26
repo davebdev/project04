@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import './GuestNav.css';
 
 const GuestNav = (props) => {
-        const { setGuestNav, guestLoggedIn } = props;
+        const { setGuestNav, authenticated } = props;
         const [anchorElNav, setAnchorElNav] = useState(null);
 
         const pages = [
@@ -51,7 +51,14 @@ const GuestNav = (props) => {
         };
 
         const handleCloseNavMenu = (e) => {
-          setGuestNav(e.target.innerText);
+            console.log(e);
+            if (e.target.localName === 'p'){
+                const nav = e.target.innerHTML.toUpperCase().replace('&AMP;', '&');
+                console.log(nav);
+                setGuestNav(nav);
+            } else if (e.target.localName === 'button') {
+                setGuestNav(e.target.innerText);
+            }
           setAnchorElNav(null);
         };
 
@@ -90,7 +97,7 @@ const GuestNav = (props) => {
                         display: { xs: 'block', md: 'none' },
                     }}
                     >
-                    {guestLoggedIn === false ? pages.filter(page => page.public === true).map((page, index) => (
+                    {authenticated === false ? pages.filter(page => page.public === true).map((page, index) => (
                         <MenuItem key={index} onClick={handleCloseNavMenu}>
                         <Typography textAlign="center">{page.name}</Typography>
                         </MenuItem>
@@ -102,7 +109,7 @@ const GuestNav = (props) => {
                     </Menu>
                 </Box>
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                    {guestLoggedIn === false ? pages.filter(page => page.public === true).map((page, index) => (
+                    {authenticated === false ? pages.filter(page => page.public === true).map((page, index) => (
                     <Button
                         key={index}
                         onClick={handleCloseNavMenu}
