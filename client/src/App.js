@@ -24,13 +24,13 @@ function App() {
         })
       }
 
-    const theme = createTheme({
+    const mainTheme = createTheme({
         palette: {
           primary: {
             main: '#000000',
           },
           secondary: {
-            main: '#7c4dff',
+            main: '#ffffff',
           },
         },
       });
@@ -53,10 +53,10 @@ function App() {
 
   return (
     <div className="App">
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={mainTheme}>
             <GuestNav setGuestNav={setGuestNav} guestLoggedIn={guestLoggedIn}/>
             {guestNav === 'SAVE THE DATE' && <SaveTheDate />}
-            {guestNav === 'RSVP' && <Rsvp setGuestLoggedIn={setGuestLoggedIn} guestLoggedIn={guestLoggedIn} loggedInData={loggedInData} guestData={guestData} setGuestData={setGuestData} rsvpAcknowledgement={rsvpAcknowledgement} setRsvpAcknowledgement={setRsvpAcknowledgement}/>}
+            {guestNav === 'RSVP' && <Rsvp setGuestLoggedIn={setGuestLoggedIn} guestLoggedIn={guestLoggedIn} loggedInData={loggedInData} guestData={guestData} setGuestData={setGuestData} rsvpAcknowledgement={rsvpAcknowledgement} setRsvpAcknowledgement={setRsvpAcknowledgement} mainTheme={mainTheme}/>}
             {guestNav === 'ON THE DAY' && <p>ON THE DAY</p>}
             {guestNav === 'TRAVEL & ACCOMM' && <p>TRAVEL & ACCOMM</p>}
             {guestNav === 'FAQS' && <p>FAQS</p>}

@@ -1,9 +1,9 @@
 .Rsvp {
     grid-column: 2 / 7;
-    color: white;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: auto;
+    border-radius: 10px;
 }
 
 .rsvpContent {
@@ -34,23 +34,8 @@
     border-radius: 5px;
 }
 
-/* .rsvpContent {
-    background-color: grey;
-    color: grey;
-    border-radius: 7px;
-} */
-
-.MuiGrid-root {
-    color: white;
-    text-align: center;
-}
-
-.MuiSvgIcon-root {
-    color: white;
-}
-
 .guestDetails {
-    border: 2px solid white;
-    border-radius: 10px;
+    display: flex;
+    padding: 0 20px;
     margin: 20px 0;
 }

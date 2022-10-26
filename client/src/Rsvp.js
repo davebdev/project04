@@ -18,29 +18,29 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 
 
-const theme = createTheme({
+const rsvpTheme = createTheme({
     palette: {
       primary: {
         main: '#000000',
       },
       secondary: {
-        main: '#7c4dff',
+        main: '#ffffff',
       },
     },
+    contrastThreshold: 3,
+    tonalOffset: 0.2,
   });
 
-//   const Item = styled(Paper)(({ theme }) => ({
-//     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-//     ...theme.typography.body2,
-//     padding: theme.spacing(1),
-//     textAlign: 'center',
-//     color: theme.palette.text.secondary,
-//   }));
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    width: '100%'
+  }));
 
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -82,7 +82,7 @@ function BootstrapDialogTitle(props) {
   };
 
 const Rsvp = (props) => {
-    const { loggedInData, guestLoggedIn, guestData, setGuestData, setGuestLoggedIn, rsvpAcknowledgement, setRsvpAcknowledgement } = props;
+    const { loggedInData, guestLoggedIn, guestData, setGuestData, setGuestLoggedIn, rsvpAcknowledgement, setRsvpAcknowledgement, mainTheme } = props;
     const [invitationOpen, setInvitationOpen] = useState(true);
 
     const handleClose = () => {
@@ -120,55 +120,65 @@ const Rsvp = (props) => {
 
     const displayGuest = (guest) => {
         return (
-            <Box sx={{ flexGrow: 1 }} className='guestDetails'>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                    <h2>{guest.fname} {guest.lname} {guest.email !== null && `(${guest.email})`}</h2>
+            <ThemeProvider theme={rsvpTheme}>
+                <Box sx={{ flexGrow: 1 }} theme={mainTheme} className='guestDetails'>
+                    <Grid container spacing={1}>
+                        <Item>
+                            <Grid item xs={12}>
+                                <h2>{guest.fname} {guest.lname} {guest.email !== null && `(${guest.email})`}</h2>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <InputLabel id="rsvp-select-label">RSVP</InputLabel>
+                                <Select
+                                autoWidth
+                                labelId="rsvp-select-label"
+                                id="rsvp"
+                                label="RSVP"
+                                value={guest.rsvp}
+                                color='secondary'
+                                >
+                                    <MenuItem value={'Yes'}>Yes</MenuItem>
+                                    <MenuItem value={'Yes Pending'}>Yes - pending flights</MenuItem>
+                                    <MenuItem value={'No'}>No</MenuItem>
+                                </Select>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <InputLabel id="age-bracket-select-label">Age bracket</InputLabel>
+                                <Select
+                                // sx={{color: 'white', border: '2px solid white'}}
+                                autoWidth
+                                labelId="age-bracket-select-label"
+                                id="age-bracket"
+                                label="Age Bracket"
+                                value={guest.age_bracket}
+                                color='secondary'
+                                >
+                                    <MenuItem value={'A'}>Adult</MenuItem>
+                                    <MenuItem value={'T'}>Teen</MenuItem>
+                                    <MenuItem value={'C'}>Child</MenuItem>
+                                </Select>
+                            </Grid>
+                            <Grid className="dietary-reqs-box" item xs={12}>
+                                <TextField
+                                className="dietary-reqs-textfield"
+                                id="dietary-reqs-textfield"
+                                label="Dietary Requirements"
+                                multiline
+                                rows={4}
+                                defaultValue={guest.dietary_reqs}
+                                />
+                            </Grid>
+                        </Item>
                     </Grid>
-                    <Grid item xs={6}>
-                        <InputLabel sx={{color: 'white'}} id="rsvp-select-label">RSVP</InputLabel>
-                        <Select
-                        sx={{color: 'white', border: '2px solid white'}}
-                        autoWidth
-                        labelId="rsvp-select-label"
-                        id="rsvp"
-                        label="RSVP"
-                        value={guest.rsvp}
-                        >
-                            <MenuItem value={'Yes'}>Yes</MenuItem>
-                            <MenuItem value={'Yes Pending'}>Yes - pending flights</MenuItem>
-                            <MenuItem value={'No'}>No</MenuItem>
-                        </Select>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <InputLabel sx={{color: 'white'}} id="age-bracket-select-label">Age bracket</InputLabel>
-                        <Select
-                        sx={{color: 'white', border: '2px solid white'}}
-                        autoWidth
-                        labelId="age-bracket-select-label"
-                        id="rsvp"
-                        label="RSVP"
-                        value={guest.age_bracket}
-                        >
-                            <MenuItem value={'A'}>Adult</MenuItem>
-                            <MenuItem value={'T'}>Teen</MenuItem>
-                            <MenuItem value={'C'}>Child</MenuItem>
-                        </Select>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <p>Dietary Requirements</p>
-                            <FormControlLabel control={<Checkbox defaultChecked />} label="Vegetarian" />
-                            <FormControlLabel control={<Checkbox />} label="Vegan" />
-                        </Grid>
-                </Grid>
-            </Box>
+                </Box>
+            </ThemeProvider>
             )
     }
 
     if (guestLoggedIn) {
         return (
         <div className="Rsvp">
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={rsvpTheme}>
                 <div>
                     {!rsvpAcknowledgement &&
                     <BootstrapDialog
@@ -196,9 +206,21 @@ const Rsvp = (props) => {
                     </BootstrapDialog>}
                     </div>
             </ThemeProvider>
+            <ThemeProvider theme={rsvpTheme}>
             <div className="rsvpContent">
+                        <Box
+                component="form"
+                sx={{
+                    '& .MuiTextField-root': { m: 1, width: '25ch' },
+                }}
+                noValidate
+                autoComplete="off"
+                >
                 {guestData !== null && guestData.map((guest, index) => <div key={index}>{displayGuest(guest)}</div>)}
+                <Button>SAVE</Button>
+                </Box>
             </div>
+            </ThemeProvider>
         </div>
         )
     } else {
