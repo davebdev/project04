@@ -7,18 +7,18 @@ import axios from "axios";
 
 function App() {
     const [guestNav, setGuestNav] = useState('SAVE THE DATE');
-    const [guestLoggedIn, setGuestLoggedIn] = useState(false);
-    const [loggedInData, setLoggedInData] = useState(null);
-    const [guestData, setGuestData] = useState(null);
+    const [authenticated, setAuthenticated] = useState(false);
+    const [userData, setUserData] = useState(null);
+    const [guestArr, setGuestArr] = useState(null);
     const [rsvpAcknowledgement, setRsvpAcknowledgement] = useState(false);
 
     const logout = (e) => {
         axios.delete('/guest/session')
         .then(() => {
             localStorage.clear();
-            setGuestLoggedIn(false);
-            setLoggedInData(null);
-            setGuestData(null);
+            setAuthenticated(false);
+            setUserData(null);
+            setGuestArr(null);
             setRsvpAcknowledgement(false);
             setGuestNav('SAVE THE DATE');
         })
@@ -38,25 +38,28 @@ function App() {
       useEffect(() => {
         axios.get('/guest/authenticate')
         .then(response => {
-            console.log(response);
             if (response.data.email) {
-                setLoggedInData(response.data);
+                setUserData(response.data);
                 axios.get('/guest')
                 .then(response => {
-                    setGuestData(response.data);
-                    setGuestLoggedIn(true);
+                    console.log("***", response.data)
+                    setGuestArr(response.data);
+                    setAuthenticated(true);
             })
             .catch(err => console.log(err));
+            } else {
+                setAuthenticated(false);
             }
         })
-    }, [guestLoggedIn]);
+        .catch(err => console.log(err));
+    }, [authenticated]);
 
   return (
     <div className="App">
         <ThemeProvider theme={mainTheme}>
-            <GuestNav setGuestNav={setGuestNav} guestLoggedIn={guestLoggedIn}/>
+            <GuestNav setGuestNav={setGuestNav} authenticated={authenticated}/>
             {guestNav === 'SAVE THE DATE' && <SaveTheDate />}
-            {guestNav === 'RSVP' && <Rsvp setGuestLoggedIn={setGuestLoggedIn} guestLoggedIn={guestLoggedIn} loggedInData={loggedInData} guestData={guestData} setGuestData={setGuestData} rsvpAcknowledgement={rsvpAcknowledgement} setRsvpAcknowledgement={setRsvpAcknowledgement} mainTheme={mainTheme}/>}
+            {guestNav === 'RSVP' && <Rsvp setAuthenticated={setAuthenticated} authenticated={authenticated} userData={userData} guestArr={guestArr} setGuestArr={setGuestArr} rsvpAcknowledgement={rsvpAcknowledgement} setRsvpAcknowledgement={setRsvpAcknowledgement} mainTheme={mainTheme}/>}
             {guestNav === 'ON THE DAY' && <p>ON THE DAY</p>}
             {guestNav === 'TRAVEL & ACCOMM' && <p>TRAVEL & ACCOMM</p>}
             {guestNav === 'FAQS' && <p>FAQS</p>}

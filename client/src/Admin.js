@@ -6,6 +6,7 @@ import AdminNav from './AdminNav';
 import ManageGuests from './ManageGuests';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AdminInvite from './AdminInvite';
+import AdminLogin from './AdminLogin';
 
 const theme = createTheme({
   palette: {
@@ -20,7 +21,7 @@ const theme = createTheme({
 
 
 const Admin = () => {
-    const [loggedIn, setLoggedIn] = useState(true);
+    const [loggedIn, setLoggedIn] = useState(false);
     const [userfname, setUserfname] = useState(null);
     const [userlname, setUserlname] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
@@ -30,11 +31,13 @@ const Admin = () => {
     useEffect(() => {
         axios.get('admin/authenticate')
         .then(res => {
-            console.log(res);
-            setLoggedIn(true);
-            setUserfname(res.data.fname);
-            setUserlname(res.data.lname);
-            setUserEmail(res.data.email);
+            console.log(res.data.errorMessage)
+            if (!res.data.errorMessage) {
+                setLoggedIn(true);
+                setUserfname(res.data.fname);
+                setUserlname(res.data.lname);
+                setUserEmail(res.data.email);
+            }
         })
       }, [loggedIn]);
 
@@ -47,7 +50,7 @@ const Admin = () => {
       }
 
     if (!loggedIn) {
-        return <Navigate replace to="/login" />;
+        return (<AdminLogin setLoggedIn={setLoggedIn} />)
       } else {
         return (
             <ThemeProvider theme={theme}>

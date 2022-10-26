@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
 import './ManageGuests.css';
 import Box from '@mui/material/Box';
@@ -19,7 +19,7 @@ const theme = createTheme({
   });
 
 const ManageGuests = (props) => {
-    const [rows, setRows] = React.useState([
+    const [rows, setRows] = useState([
           { age_bracket: "-",
             comments: "-",
             dietary_reqs: "-",
@@ -177,7 +177,7 @@ const ManageGuests = (props) => {
             },
           ];
 
-    React.useEffect(() => {
+    useEffect(() => {
         axios.get('/guest/all')
         .then((dbRes) => {
             setRows(dbRes.data)

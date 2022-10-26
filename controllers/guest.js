@@ -8,7 +8,7 @@ router.get("/authenticate", (request, response) => {
     Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
-            return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
+            return response.json({errorMessage: "You are currently not logged in. Please login to view this page."})
         } else {
             const user = request.session.user;
             const expiryDate = new Date(dbRes.rows[0].expire);
@@ -36,7 +36,7 @@ router.delete("/session", (request, response) => {
     Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
-            return response.status(401).json({errorMessage: "You are currently not logged in."})
+            return response.json({errorMessage: "You are currently not logged in."})
         } else {
             const user = request.session.user;
             const expiryDate = new Date(dbRes.rows[0].expire);
@@ -61,7 +61,7 @@ router.get("/all", (request, response) => {
     Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
-            return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
+            return response.json({errorMessage: "You are currently not logged in. Please login to view this page."})
         } else {
             const user = request.session.user;
             const expiryDate = new Date(dbRes.rows[0].expire);
@@ -89,7 +89,7 @@ router.get("/", (request, response) => {
     Session.checkSessionMatches(sid)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
-            return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
+            return response.json({errorMessage: "You are currently not logged in. Please login to view this page."})
         } else {
             const user = request.session.user;
             const expiryDate = new Date(dbRes.rows[0].expire);
@@ -183,15 +183,11 @@ router.put("/", (request, response) => {
             const expiryDate = new Date(dbRes.rows[0].expire);
             const currentDate = new Date();
             if (expiryDate.getTime() > currentDate.getTime()) {
-                if (user === 'guest') {
-                    return response.status(400).json({ errorMessage: "User currently logged in as Guest. User must be an admin to view this page."})
-                } else if (user === 'admin') {
-                    Guest.updateGuestRow(row)
-                    .then(dbRes => {
-                        return response.status(201).json({ infoMessage: "Update successful" });
-                    })
-                    .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
-                }
+                Guest.updateGuestRow(row)
+                .then(dbRes => {
+                    return response.status(201).json({ infoMessage: "Update successful" });
+                })
+                .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
             } else {
                 return response.status(440).json({errorMessage: "Your session has expired. Please login again."})
             }
