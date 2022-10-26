@@ -26,7 +26,7 @@ router.get("/:id", (request, response) => {
                             return response.json({ errorMessage: "No invitation with that id" })
                         } else {
                             results.invite = dbRes.rows;
-                            Guest.getInviteGuestInfo(invite_id)
+                            Guest.getGuestsByInviteId(invite_id)
                             .then(dbRes => {
                                 results.guests = dbRes.rows;
                                 return response.status(200).json(results);

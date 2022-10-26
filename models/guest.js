@@ -1,7 +1,7 @@
 const db = require("../database/db");
 
 const Guest  = {
-    getGuestInfo: (email) => {
+    getGuestByEmail: (email) => {
         const sql = `SELECT g.id, g.invite_id, g.fname, g.lname, g.email,
         g.rsvp, g.dietary_reqs, g.age_bracket,
         i.primary_email, i.invite_status,
@@ -26,11 +26,22 @@ const Guest  = {
         .then(dbRes => dbRes)
         .catch(err => console.log(err))
     },
-    getInviteGuestInfo: (invite_id) => {
+    getGuestsByInviteId: (invite_id) => {
         const sql = `SELECT id, invite_id, fname, lname,
         email, rsvp, dietary_reqs, age_bracket
         FROM guests
-        WHERE invite_id = $1`
+        WHERE invite_id = $1;`
+        return db.query(sql, [invite_id])
+        .then(dbRes => dbRes)
+        .catch(err => console.log(err))
+    },
+    getGuestsAndInviteById: (invite_id) => {
+        const sql = `select g.id, g.invite_id, g.fname, g.lname, g.email, g.rsvp, g.dietary_reqs, g.age_bracket,
+        i.primary_email, i.invite_status, i.logged_in_timestamp, i.logged_in_guest, i.comments
+        FROM guests g
+        LEFT JOIN invites i
+        ON g.invite_id=i.id
+        WHERE g.invite_id=$1;`
         return db.query(sql, [invite_id])
         .then(dbRes => dbRes)
         .catch(err => console.log(err))

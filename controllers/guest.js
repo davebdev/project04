@@ -92,17 +92,16 @@ router.get("/", (request, response) => {
             return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
         } else {
             const user = request.session.user;
-            if (request.session.user === 'guest') {
-                const guestEmail = request.session.email;
-            }
             const expiryDate = new Date(dbRes.rows[0].expire);
             const currentDate = new Date();
             if (expiryDate.getTime() > currentDate.getTime()) {
                 if (user === 'admin') {
                     return response.status(400).json({ errorMessage: "User currently logged in as Admin. User must be a guest on the list."})
                 } else if (user === 'guest') {
-                    Guest.getGuestInfo(guestEmail)
+                    const invite_id = request.session.invite_id;
+                    Guest.getGuestsAndInviteById(invite_id)
                     .then(dbRes => {
+                        console.log(dbRes.rows);
                         return response.status(200).json(dbRes.rows);
                     })
                     .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
@@ -112,17 +111,22 @@ router.get("/", (request, response) => {
             }
         }
     })
-    .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
+    .catch((err) => {
+        console.log(err);
+        response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' })
+    });
 })
 
 router.post("/login", (request, response) => {
     const email = request.body.email;
-    Guest.getGuestInfo(email)
+    Guest.getGuestByEmail(email)
     .then(dbRes => {
         if (dbRes.rowCount === 0) {
             return response.status(400).json({ errorMessage: 'That email address wasn\'t found on our list. Please try another email or contact us directly to RSVP.' })
         } else {
             request.session.email = email;
+            request.session.invite_id = dbRes.rows[0].invite_id;
+            request.session.guest_id = dbRes.rows[0].id;
             request.session.user = 'guest';
             return response.json({ infoMessage: 'Successfully logged in' });
         }
