@@ -10,6 +10,17 @@
     grid-column: 1 / 4;
 }
 
+.guestDetails {
+    display: flex;
+    padding: 0 20px;
+    margin: 20px 0;
+}
+
+.InviteComments {
+    display: flex;
+    flex-direction: column;
+}
+
 #login-heading {
     grid-column: 2 / 3;
     text-align: center;
@@ -32,10 +43,4 @@
     margin: 10px;
     padding: 10px;
     border-radius: 5px;
-}
-
-.guestDetails {
-    display: flex;
-    padding: 0 20px;
-    margin: 20px 0;
 }

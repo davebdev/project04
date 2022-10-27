@@ -4,8 +4,9 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, TextField } from '@mui/material';
 import { DataGrid, GridToolbar, GridRowModes, GridToolbarContainer, GridActionsCellItem, GridCellParams, useGridApiContext, useGridApiEventHandler } from '@mui/x-data-grid';
+import { height } from "@mui/system";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -253,6 +254,21 @@ const RsvpDetails = (props) => {
               },
             ];
 
+            const handleForm = (e) => {
+                e.preventDefault();
+                const form = new FormData(e.target);
+
+                const data = {
+                    invite_id: invite.invite_id,
+                    comments: form.get('comments')
+                }
+                axios.patch('/invite/comment', data)
+                .then(dbRes => {
+                    console.log('update successful');
+                    forceUpdate();
+                })
+
+            }
 
     useEffect(() => {
         axios.get('/guest')
@@ -268,12 +284,7 @@ const RsvpDetails = (props) => {
             </ThemeProvider>
             <ThemeProvider theme={mainTheme}>
                 <div className="rsvpContent">
-                    <Box className="InviteDetails">
-                        <p>Invite ID: {invite.invite_id}</p>
-                        <p>Comments: {invite.comments}</p>
-                        <p>Primary email: {invite.primary_email}</p>
-                    </Box>
-                    <Box className="GuestGrid" sx={{height: '40vh', width: '70vw', display: 'flex'}}>
+                    <Box className="GuestGrid" sx={{height: '40vh', width: '100%', display: 'flex'}}>
                         <div style={{ flexGrow: 1 }}>
                             <DataGrid
                             experimentalFeatures={{ newEditingApi: true }}
@@ -293,6 +304,17 @@ const RsvpDetails = (props) => {
                             sx={{ backgroundColor: '#F3f3f3'}}
                             />
                         </div>
+                    </Box>
+                    <Box component='form' className="InviteComments" onSubmit={handleForm} sx={{ padding: '10px', backgroundColor: '#F3f3f3', borderRadius: '5px', m: '20px 0', height: 'fit-content' }}>
+                        <TextField
+                        id="comments"
+                        label="Comments"
+                        name="comments"
+                        multiline
+                        maxRows={5}
+                        value={invite.comments}
+                        />
+                        <Button sx={{ m: '10px 0' }} variant="contained" type="submit">Save</Button>
                     </Box>
                 </div>
             </ThemeProvider>

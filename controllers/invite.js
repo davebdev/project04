@@ -43,4 +43,21 @@ router.get("/:id", (request, response) => {
     .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
 });
 
+router.patch('/comment', (request, response) => {
+    const sid = request.sessionID;
+    const data = request.body;
+    console.log("invite_id: ", data.invite_id, "comments: ", data.comments);
+    Session.checkSessionMatches(sid)
+    .then(dbRes => {
+        if (dbRes.rowCount === 0) {
+            return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
+        } else {
+            Invite.updateComments(data)
+            .then(dbRes => response.status(200).json({infoMessage: "Comments updated"}))
+            .catch(err => console.log(err));
+        }
+    })
+    .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
+})
+
 module.exports = router;
