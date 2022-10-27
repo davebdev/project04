@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import SaveTheDate from "./SaveTheDate";
 import GuestNav from "./GuestNav";
 import Rsvp from "./Rsvp";
+import EventDetails from './EventDetails';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from "axios";
 
@@ -61,7 +62,7 @@ function App() {
             <GuestNav setGuestNav={setGuestNav} authenticated={authenticated}/>
             {guestNav === 'SAVE THE DATE' && <SaveTheDate />}
             {guestNav === 'RSVP' && <Rsvp setAuthenticated={setAuthenticated} authenticated={authenticated} userData={userData} guestArr={guestArr} setGuestArr={setGuestArr} rsvpAcknowledgement={rsvpAcknowledgement} setRsvpAcknowledgement={setRsvpAcknowledgement} mainTheme={mainTheme}/>}
-            {guestNav === 'ON THE DAY' && <p>ON THE DAY</p>}
+            {guestNav === 'ON THE DAY' && <EventDetails />}
             {guestNav === 'TRAVEL & ACCOMM' && <p>TRAVEL & ACCOMM</p>}
             {guestNav === 'FAQS' && <p>FAQS</p>}
             {guestNav === 'GIFT REGISTRY' && <p>GIFT REGISTRY</p>}

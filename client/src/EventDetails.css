@@ -1,0 +1,10 @@
+.EventDetails {
+    grid-column: 2 / 7;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    justify-items: center;
+}
+
+.EventDetailsInner {
+    grid-column: 4 / 5;
+}

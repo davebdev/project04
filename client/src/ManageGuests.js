@@ -1,21 +1,11 @@
 import { useState, useEffect} from 'react';
 import { Button, Box } from '@mui/material/';
 import './ManageGuests.css';
-import { DataGrid, GridToolbar, GridToolbarContainer, GridRowModes, GridToolbarExport, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridRowModes, GridToolbarExport, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridActionsCellItem } from '@mui/x-data-grid';
 import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 
-// const theme = createTheme({
-//     palette: {
-//       primary: {
-//         main: '#000000',
-//       },
-//       secondary: {
-//         main: '#7c4dff',
-//       },
-//     },
-//   });
 
 const EditToolbar = (props) => {
     const { setAdminNav, setEditInvite } = props;
@@ -43,11 +33,6 @@ const EditToolbar = (props) => {
     );
 }
 
-// EditToolbar.propTypes = {
-// setRowModesModel: PropTypes.func.isRequired,
-// setRows: PropTypes.func.isRequired,
-// };
-
 const ManageGuests = (props) => {
     const { setAdminNav, setEditInvite, theme } = props;
     const [rows, setRows] = useState([
@@ -58,6 +43,16 @@ const ManageGuests = (props) => {
             logged_in_guest: "-",
             logged_in_timestamp: "-"        }
         ]);
+
+        const redirectToEdit = (e, id) => {
+            console.log(e)
+            setEditInvite(id);
+            setAdminNav('EDIT INVITE');
+        }
+
+        const deleteRow = (e, id) => {
+            console.log(id)
+        }
 
         const columns = [
             {
@@ -119,18 +114,28 @@ const ManageGuests = (props) => {
             },
             {
               field: 'edit_invite',
+              type: 'actions',
               headerName: 'Edit Invite',
               headerAlign: 'left',
               align: 'left',
               width: 150,
               editable: false,
-              renderCell: (params) => {
-                  const redirectToEdit = (e) => {
-                      e.stopPropagation();
-                      setEditInvite(params.row.id);
-                      setAdminNav('EDIT INVITE');
-                  }
-                  return <Button variant="outlined" onClick={redirectToEdit}>EDIT INVITE</Button>;
+              cellClassName: 'actions',
+              getActions: ({ id }) => {
+                return [
+                  <GridActionsCellItem
+                    icon={<i className="fa-light fa-pen-to-square"></i>}
+                    label="Edit"
+                    onClick={(e) => redirectToEdit(e, id)}
+                    color="inherit"
+                  />,
+                  <GridActionsCellItem
+                    icon={<i className="fa-light fa-trash"></i>}
+                    label="Delete"
+                    onClick={(e) => deleteRow(e, id)}
+                    color="inherit"
+                  />,
+                ];
               },
               headerClassName: 'GuestsColumnHeader'
             },
