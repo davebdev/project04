@@ -15,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import './AdminNav.css';
 
 const AdminNav = (props) => {
+    const { logout, fname, lname, setAdminNav, theme} = props;
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -37,7 +38,7 @@ const AdminNav = (props) => {
     },
     {
         name: 'Logout',
-        onclick: props.logout
+        onclick: logout
     }
 ];
 
@@ -49,7 +50,13 @@ const AdminNav = (props) => {
   };
 
   const handleCloseNavMenu = (e) => {
-    props.setAdminNav(e.target.innerText);
+
+    if (e.target.localName === 'p'){
+        const nav = e.target.innerHTML.toUpperCase();
+        setAdminNav(nav);
+    } else if (e.target.localName === 'button') {
+        setAdminNav(e.target.innerText);
+    }
     setAnchorElNav(null);
   };
 
@@ -113,7 +120,7 @@ const AdminNav = (props) => {
             <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt={`${props.fname} ${props.lname}`} src="/static/images/avatar/2.jpg" />
+                    <Avatar alt={`${fname} ${lname}`} src="/static/images/avatar/2.jpg" />
                 </IconButton>
                 </Tooltip>
                 <Menu

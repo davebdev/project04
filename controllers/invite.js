@@ -43,6 +43,31 @@ router.get("/:id", (request, response) => {
     .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
 });
 
+router.post("/", (request, response) => {
+    const sid = request.sessionID;
+    Session.checkSessionMatches(sid)
+    .then(dbRes => {
+        if (dbRes.rowCount === 0) {
+            return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
+        } else {
+            const user = request.session.user;
+            const expiryDate = new Date(dbRes.rows[0].expire);
+            const currentDate = new Date();
+            if (expiryDate.getTime() > currentDate.getTime()) {
+                if (user === 'guest') {
+                    return response.status(400).json({ errorMessage: "User currently logged in as Guest. User must be an admin to view this page."})
+                } else if (user === 'admin') {
+
+                    Invite.createNewInvite()
+                    .then(dbRes => response.status(200).json(dbRes.rows))
+                    .catch(err => console.log(err));
+                }
+            }
+        }
+    })
+    .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
+})
+
 router.patch('/comment', (request, response) => {
     const sid = request.sessionID;
     const data = request.body;
@@ -52,9 +77,14 @@ router.patch('/comment', (request, response) => {
         if (dbRes.rowCount === 0) {
             return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
         } else {
-            Invite.updateComments(data)
-            .then(dbRes => response.status(200).json({infoMessage: "Comments updated"}))
-            .catch(err => console.log(err));
+            const user = request.session.user;
+            const expiryDate = new Date(dbRes.rows[0].expire);
+            const currentDate = new Date();
+            if (expiryDate.getTime() > currentDate.getTime()) {
+                Invite.updateComments(data)
+                .then(dbRes => response.status(200).json({infoMessage: "Comments updated"}))
+                .catch(err => console.log(err));
+            }
         }
     })
     .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));

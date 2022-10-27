@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS admins (
 DROP TABLE IF EXISTS invites CASCADE;
 CREATE TABLE IF NOT EXISTS invites (
     id SERIAL PRIMARY KEY,
-    primary_email TEXT UNIQUE,
     invite_status TEXT DEFAULT 'To be invited',
     logged_in_timestamp DATE,
     logged_in_guest TEXT,

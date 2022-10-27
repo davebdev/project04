@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const RsvpLogin = (props) => {
-    const { setAuthenticated } = props;
+    const { setAuthenticated, setGuestArr } = props;
 
     const guestLogin = (e) => {
         e.preventDefault();
@@ -12,7 +12,11 @@ const RsvpLogin = (props) => {
         axios.post('/guest/login', data)
         .then((dbRes) => {
             console.log(dbRes)
-            setAuthenticated(true);
+            axios.get('/guest')
+            .then(response => {
+                setGuestArr(response.data);
+                setAuthenticated(true);
+            })
         })
         .catch((err) => {
             console.log(err);

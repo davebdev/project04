@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, GridToolbar, GridRowModes, GridToolbarContainer, GridActionsCellItem, GridCellParams } from '@mui/x-data-grid';
 import './AdminInvite.css';
-import { Input, Button, Box } from '@mui/material';
+import { Input, InputLabel, Button, Box, TextField } from '@mui/material';
 
 import PropTypes from 'prop-types';
 
@@ -75,6 +75,21 @@ const AdminInvite = (props) => {
 
     const forceUpdate = () => {
         setUpdate(!update);
+    }
+
+    const guestNames = () => {
+        let result;
+        const lastIndex = rows.length - 1;
+        for (let i = 0; i < rows.length; i++) {
+            if (i === 0) {
+                result = rows[0].fname;
+            } else if (i !== 0 && i !== lastIndex) {
+                result = result + `, ${rows[i].fname}`
+            } else if (i === lastIndex && lastIndex !== 0) {
+                result = result + ` and ${rows[i].fname}`
+            }
+        }
+        return result;
     }
 
     const handleRowEditStart = (params, event) => {
@@ -238,6 +253,8 @@ const AdminInvite = (props) => {
           },
         ];
 
+    const ariaLabel = { 'aria-label': 'description' };
+
   useEffect(() => {
       axios.get(`/invite/${props.editInvite}`)
       .then((dbRes) => {
@@ -249,32 +266,10 @@ const AdminInvite = (props) => {
     return (
         <ThemeProvider theme={theme}>
             <div className='InviteBox'>
-                <h1>Invitation to: {inviteDetails.primary_email}</h1>
-                <Box
-                component="form"
-                sx={{
-                    borderRadius: '5px',
-                    backgroundColor: 'white',
-                    height: '30vh',
-                    width: '90vw',
-                    display: 'flex'
-                }}
-                >
-                    <div className='InviteDetails' style={{ flexGrow: 1 }}>
-                        <Input id="primary-email" disabled placeholder='Primary email (null)' value={inviteDetails.primary_email}/>
-
-                        <Input id="invite-status" disabled placeholder='Invite status (null)' value={inviteDetails.invite_status === null ? '' : inviteDetails.invite_status}/>
-
-                        <Input id="logged-in-timestamp" disabled placeholder='Last logged in (never)' value={inviteDetails.logged_in_timestamp === null ? '' : inviteDetails.logged_in_timestamp}/>
-
-                        <Input id="logged-in-guest" disabled placeholder='Login email (null)' value={inviteDetails.logged_in_guest === null ? '' : inviteDetails.logged_in_guest}/>
-
-                        <Input id="comments" disabled multiline={true} rows='4' fullWidth={true} placeholder='Comments (none)' value={inviteDetails.comments === null ? '' : inviteDetails.comments}/>
-                    </div>
-                </Box>
+                <h1>Invitation to {guestNames()}</h1>
                 <h2>Guests attached to this invite:</h2>
             </div>
-            <Box className="GuestGrid" sx={{height: '30vh', width: '90vw', display: 'flex'}}>
+            <Box className="GuestGrid" sx={{height: '35vh', width: '90vw', display: 'flex'}}>
             <div style={{ flexGrow: 1 }}>
                 <DataGrid
                     components={{
@@ -301,6 +296,25 @@ const AdminInvite = (props) => {
                 />
             </div>
         </Box>
+        <div className='InviteBox'>
+        <Box
+                component="form"
+                sx={{
+                    borderRadius: '5px',
+                    backgroundColor: '#F3f3f3',
+                    height: '35vh',
+                    width: '90vw',
+                    display: 'flex'
+                }}
+                >
+                    <div className='InviteDetails' style={{ flexGrow: 1 , padding: '10px'}}>
+                        <TextField margin="dense" className='inviteField' variant="outlined" inputProps={ariaLabel} id="invite-status" disabled placeholder='(null)' label='Invite status' value={inviteDetails.invite_status === null ? '' : inviteDetails.invite_status}/>
+                        <TextField margin="dense" className='inviteField' variant="outlined" inputProps={ariaLabel} id="logged-in-timestamp" disabled placeholder='(never)' label='Last logged in' value={inviteDetails.logged_in_timestamp === null ? '' : inviteDetails.logged_in_timestamp}/>
+                        <TextField margin="dense" className='inviteField' variant="outlined" inputProps={ariaLabel} id="logged-in-guest" disabled placeholder='(null)' label='By' value={inviteDetails.logged_in_guest === null ? '' : inviteDetails.logged_in_guest}/>
+                        <TextField margin="dense" className='inviteField' variant="outlined" inputProps={ariaLabel} id="comments" disabled multiline={true} rows='4' fullWidth={true} placeholder='(none)' label='Comments' value={inviteDetails.comments === null ? '' : inviteDetails.comments}/>
+                    </div>
+                </Box>
+        </div>
         </ThemeProvider>
     )
 }

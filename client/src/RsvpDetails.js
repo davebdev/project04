@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, TextField } from '@mui/material';
 import { DataGrid, GridToolbar, GridRowModes, GridToolbarContainer, GridActionsCellItem, GridCellParams, useGridApiContext, useGridApiEventHandler } from '@mui/x-data-grid';
-import { height } from "@mui/system";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -64,13 +63,17 @@ const RsvpDetails = (props) => {
 
         const names = () => {
             let result;
-
-            if (guestArr.length === 1) {
-                result = guestArr[0].fname;
-            } else {
-                const lastIndex = guestArr.length - 1;
-                result = guestArr.filter((guest, index) => index !== lastIndex).map(guest => `${guest.fname}, `);
-                result.push(`and ${guestArr[lastIndex].fname}`)
+            if (rows) {
+                const lastIndex = rows.length - 1;
+                for (let i = 0; i < rows.length; i++) {
+                    if (i === 0) {
+                        result = rows[0].fname;
+                    } else if (i !== 0 && i !== lastIndex) {
+                        result = result + `, ${rows[i].fname}`
+                    } else if (i === lastIndex && lastIndex !== 0) {
+                        result = result + ` and ${rows[i].fname}`
+                    }
+                }
             }
             return result;
         }
@@ -114,7 +117,6 @@ const RsvpDetails = (props) => {
         if (guestArr) {
             invite.invite_id = guestArr[0].invite_id;
             invite.comments = guestArr[0].comments;
-            invite.primary_email = guestArr[0].primary_email;
         }
 
 
@@ -262,11 +264,13 @@ const RsvpDetails = (props) => {
                     invite_id: invite.invite_id,
                     comments: form.get('comments')
                 }
+                console.log(data);
                 axios.patch('/invite/comment', data)
                 .then(dbRes => {
                     console.log('update successful');
                     forceUpdate();
                 })
+                .catch(err => console.log(err))
 
             }
 
@@ -312,7 +316,7 @@ const RsvpDetails = (props) => {
                         name="comments"
                         multiline
                         maxRows={5}
-                        value={invite.comments}
+                        defaultValue={invite.comments}
                         />
                         <Button sx={{ m: '10px 0' }} variant="contained" type="submit">Save</Button>
                     </Box>

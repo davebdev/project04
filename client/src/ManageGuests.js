@@ -1,38 +1,62 @@
 import { useState, useEffect} from 'react';
-import Button from '@mui/material/Button';
+import { Button, Box } from '@mui/material/';
 import './ManageGuests.css';
-import Box from '@mui/material/Box';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarContainer, GridRowModes, GridToolbarExport, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector } from '@mui/x-data-grid';
+import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { Navigate } from "react-router-dom";
 
-const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#000000',
-      },
-      secondary: {
-        main: '#7c4dff',
-      },
-    },
-  });
+// const theme = createTheme({
+//     palette: {
+//       primary: {
+//         main: '#000000',
+//       },
+//       secondary: {
+//         main: '#7c4dff',
+//       },
+//     },
+//   });
+
+const EditToolbar = (props) => {
+    const { setAdminNav, setEditInvite } = props;
+
+    const handleClick = () => {
+        console.log('Add record click');
+        axios.post("/invite")
+        .then(dbRes => {
+            console.log(dbRes);
+            setEditInvite(dbRes.data[0].id);
+            setAdminNav('EDIT INVITE');
+        })
+    };
+
+    return (
+        <GridToolbarContainer>
+            <Button color="primary" startIcon={<i className='fa-light fa-floppy-disk'></i>} onClick={handleClick}>
+                Add record
+            </Button>
+            <GridToolbarColumnsButton />
+            <GridToolbarFilterButton />
+            <GridToolbarDensitySelector />
+            <GridToolbarExport />
+        </GridToolbarContainer>
+    );
+}
+
+// EditToolbar.propTypes = {
+// setRowModesModel: PropTypes.func.isRequired,
+// setRows: PropTypes.func.isRequired,
+// };
 
 const ManageGuests = (props) => {
+    const { setAdminNav, setEditInvite, theme } = props;
     const [rows, setRows] = useState([
-          { age_bracket: "-",
-            comments: "-",
-            dietary_reqs: "-",
-            email: "-",
-            fname: "-",
+          { comments: "-",
+            guests: "-",
             id: 0,
-            invite_id: null,
             invite_status: "-",
-            lname: "-",
             logged_in_guest: "-",
-            logged_in_timestamp: "-",
-            primary_email: "-",
-            rsvp: "-" }
+            logged_in_timestamp: "-"        }
         ]);
 
         const columns = [
@@ -41,89 +65,24 @@ const ManageGuests = (props) => {
               headerName: 'ID',
               headerAlign: 'left',
               align: 'left',
-              width: 90,
+              flex: 0.1,
               hideable: false,
               headerClassName: 'GuestsColumnHeader'
           },
             {
-              field: 'invite_id',
-              headerName: 'Invite ID',
-              type: 'number',
+              field: 'guests',
+              headerName: 'Guests',
               headerAlign: 'left',
               align: 'left',
-              width: 90,
+              flex: 0.3,
               editable: false,
-              hide: true,
-              headerClassName: 'GuestsColumnHeader'
-            },
-            {
-              field: 'fname',
-              headerName: 'First name',
-              headerAlign: 'left',
-              align: 'left',
-              width: 150,
-              editable: false,
-              headerClassName: 'GuestsColumnHeader'
-            },
-            {
-              field: 'lname',
-              headerName: 'Last name',
-              headerAlign: 'left',
-              align: 'left',
-              width: 150,
-              editable: false,
-              headerClassName: 'GuestsColumnHeader'
-            },
-            {
-              field: 'email',
-              headerName: 'Email',
-              headerAlign: 'left',
-              align: 'left',
-              width: 200,
-              editable: false,
-              headerClassName: 'GuestsColumnHeader'
-            },
-            {
-                field: 'primary_email',
-                headerName: 'Primary email',
-                headerAlign: 'left',
-                align: 'left',
-                width: 200,
-                editable: false,
-                headerClassName: 'GuestsColumnHeader'
-            },
-            {
-              field: 'rsvp',
-              headerName: 'RSVP',
-              headerAlign: 'left',
-              align: 'left',
-              width: 90,
-              editable: false,
-            },
-            {
-              field: 'age_bracket',
-              headerName: 'Age Bracket',
-              headerAlign: 'left',
-              align: 'left',
-              width: 110,
-              editable: false,
-              headerClassName: 'GuestsColumnHeader'
-            },
-            {
-              field: 'dietary_reqs',
-              headerName: 'Dietary Requirements',
-              headerAlign: 'left',
-              align: 'left',
-              width: 300,
-              editable: false,
-              headerClassName: 'GuestsColumnHeader'
             },
             {
               field: 'invite_status',
               headerName: 'Invite Status',
               headerAlign: 'left',
               align: 'left',
-              width: 100,
+              flex: 0.1,
               editable: false,
               hide: true,
               headerClassName: 'GuestsColumnHeader'
@@ -134,7 +93,7 @@ const ManageGuests = (props) => {
               type: 'dateTime',
               headerAlign: 'left',
               align: 'left',
-              width: 100,
+              flex: 0.1,
               editable: false,
               hide: true,
               headerClassName: 'GuestsColumnHeader'
@@ -144,7 +103,7 @@ const ManageGuests = (props) => {
               headerName: 'Logged in email',
               headerAlign: 'left',
               align: 'left',
-              width: 200,
+              flex: 0.1,
               editable: false,
               hide: true,
               headerClassName: 'GuestsColumnHeader'
@@ -154,7 +113,7 @@ const ManageGuests = (props) => {
               headerName: 'Comments',
               headerAlign: 'left',
               align: 'left',
-              width: 300,
+              flex: 0.3,
               editable: false,
               headerClassName: 'GuestsColumnHeader'
             },
@@ -168,8 +127,8 @@ const ManageGuests = (props) => {
               renderCell: (params) => {
                   const redirectToEdit = (e) => {
                       e.stopPropagation();
-                      props.setEditInvite(params.row.invite_id);
-                      props.setAdminNav('EDIT INVITE');
+                      setEditInvite(params.row.id);
+                      setAdminNav('EDIT INVITE');
                   }
                   return <Button variant="outlined" onClick={redirectToEdit}>EDIT INVITE</Button>;
               },
@@ -180,7 +139,38 @@ const ManageGuests = (props) => {
     useEffect(() => {
         axios.get('/guest/all')
         .then((dbRes) => {
-            setRows(dbRes.data)
+            console.log(dbRes.data)
+            const allData = dbRes.data
+            const inviteData = []
+            for (let i = 0; i < allData.length; i++) {
+                if (i === 0) {
+                    inviteData.push({
+                        id: allData[i].invite_id,
+                        guests: `${allData[i].fname} ${allData[i].lname}`,
+                        invite_status: allData[i].invite_status,
+                        logged_in_guest: allData[i].logged_in_guest,
+                        logged_in_timestamp: allData[i].logged_in_timestamp,
+                        comments: allData[i].comments
+                    })
+                } else if (allData[i].invite_id === allData[i-1].invite_id) {
+                    inviteData.find((o, j) => {
+                        if (o.id === allData[i].invite_id) {
+                            inviteData[j].guests = inviteData[j].guests + `, ${allData[i].fname} ${allData[i].lname}`
+                            return true;
+                        }
+                    });
+                } else {
+                    inviteData.push({
+                        id: allData[i].invite_id,
+                        guests: `${allData[i].fname} ${allData[i].lname}`,
+                        invite_status: allData[i].invite_status,
+                        logged_in_guest: allData[i].logged_in_guest,
+                        logged_in_timestamp: allData[i].logged_in_timestamp,
+                        comments: allData[i].comments
+                })
+            }
+        }
+        setRows(inviteData);
         })
     }, [])
 
@@ -191,7 +181,10 @@ const ManageGuests = (props) => {
         <Box className="GuestGrid" sx={{height: '80vh', width: '90vw', display: 'flex'}}>
             <div style={{ flexGrow: 1 }}>
                 <DataGrid
-                    components={{ Toolbar: GridToolbar }}
+                    components={{ Toolbar: EditToolbar }}
+                    componentsProps={{
+                        toolbar: { setAdminNav, setEditInvite },
+                        }}
                     rows={rows}
                     columns={columns}
                     pageSize={25}

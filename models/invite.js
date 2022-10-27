@@ -2,8 +2,14 @@ const db = require("../database/db");
 
 const Invite  = {
     getInviteInfo: (invite_id) => {
-        const sql = 'SELECT * FROM invites WHERE id=$1;';
+        const sql = `SELECT * FROM invites WHERE id=$1;`;
         return db.query(sql, [invite_id])
+        .then(dbRes => dbRes)
+    },
+    createNewInvite: () => {
+        const sql = `INSERT INTO
+        invites DEFAULT VALUES RETURNING id;`;
+        return db.query(sql)
         .then(dbRes => dbRes)
     },
     updateComments: (data) => {

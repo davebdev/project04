@@ -12,6 +12,10 @@
     grid-template-rows: repeat(5, 1fr);
 }
 
+.MuiFormControl-root {
+    margin: 0 10px;
+}
+
 #primary-email {
     grid-row: 1 / 2;
     padding: 10px;

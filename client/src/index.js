@@ -14,12 +14,12 @@ import AdminLogin from './AdminLogin';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-        <Routes>
-            <Route index element={<App />} />
-            <Route path="admin" element={<Admin />} />
-            <Route path="login" element={<AdminLogin />} />
-        </Routes>
-    </BrowserRouter>
+        <BrowserRouter>
+            <Routes>
+                <Route index element={<App />} />
+                <Route path="admin" element={<Admin />} />
+                <Route path="login" element={<AdminLogin />} />
+            </Routes>
+        </BrowserRouter>
   </React.StrictMode>
 );

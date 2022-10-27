@@ -8,8 +8,8 @@ import axios from "axios";
 function App() {
     const [guestNav, setGuestNav] = useState('SAVE THE DATE');
     const [authenticated, setAuthenticated] = useState(false);
-    const [userData, setUserData] = useState(null);
-    const [guestArr, setGuestArr] = useState(null);
+    const [userData, setUserData] = useState([]);
+    const [guestArr, setGuestArr] = useState([]);
     const [rsvpAcknowledgement, setRsvpAcknowledgement] = useState(false);
 
     const logout = (e) => {
@@ -18,7 +18,7 @@ function App() {
             localStorage.clear();
             setAuthenticated(false);
             setUserData(null);
-            setGuestArr(null);
+            setGuestArr([]);
             setRsvpAcknowledgement(false);
             setGuestNav('SAVE THE DATE');
         })
@@ -38,6 +38,7 @@ function App() {
       useEffect(() => {
         axios.get('/guest/authenticate')
         .then(response => {
+            console.log(response.data)
             if (response.data.email) {
                 setUserData(response.data);
                 axios.get('/guest')

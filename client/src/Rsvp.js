@@ -14,7 +14,7 @@ const Rsvp = (props) => {
         )
     } else {
         return (
-            <RsvpLogin setAuthenticated={setAuthenticated} />
+            <RsvpLogin setAuthenticated={setAuthenticated} setGuestArr={setGuestArr} />
         )
     }
 }
