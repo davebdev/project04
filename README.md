@@ -130,14 +130,14 @@ After putting together some wireframes, I had an idea of what the database might
 
 This is what I first came up with:
 
-[DB Schema v1](client/public/img/db-schema-v1.png)
+![DB Schema v1](client/public/img/db-schema-v1.png)
 
 
 #### Version 2
 
 After setting up the email API, I realised that the concept of keeping templates in the database was not practical, nor would it serve the app, so I took that table out.
 
-[DB Schema v2](client/public/img/db-schema-v2.png)
+![DB Schema v2](client/public/img/db-schema-v2.png)
 
 
 ### Version 3
