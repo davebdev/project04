@@ -95,15 +95,16 @@ const GuestNav = (props) => {
                     onClose={handleCloseNavMenu}
                     sx={{
                         display: { xs: 'block', md: 'none' },
+
                     }}
                     >
                     {authenticated === false ? pages.filter(page => page.public === true).map((page, index) => (
                         <MenuItem key={index} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center" className='NavPinkNeon' sx={{ m: 1, fontFamily: 'Rajdhani', fontSize: 20 }}>{page.name}</Typography>
+                        <Typography textAlign="center" sx={{ m: 1, fontFamily: 'Rajdhani', fontSize: 20 }}>{page.name}</Typography>
                         </MenuItem>
                     )) : pages.map((page, index) => (
                         <MenuItem key={index} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center" className='NavPinkNeon' sx={{ m: 1, fontFamily: 'Rajdhani', fontSize: 20 }}>{page.name}</Typography>
+                        <Typography textAlign="center" sx={{ m: 1, fontFamily: 'Rajdhani', fontSize: 20 }}>{page.name}</Typography>
                         </MenuItem>
                     ))}
                     </Menu>
