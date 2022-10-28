@@ -55,7 +55,8 @@ const ManageGuests = (props) => {
             .then(() => {
                 axios.get('/guest/all')
                 .then((dbRes) => {
-                    const allData = dbRes.data
+                    const allData = [...dbRes.data]
+                    allData.sort((a,b) => a.invite_id - b.invite_id)
                     const inviteData = []
                     for (let i = 0; i < allData.length; i++) {
                         if (i === 0) {
@@ -181,8 +182,8 @@ const ManageGuests = (props) => {
           React.useEffect(() => {
         axios.get('/guest/all')
         .then((dbRes) => {
-            console.log(dbRes.data)
-            const allData = dbRes.data
+            const allData = [...dbRes.data]
+            allData.sort((a,b) => a.invite_id - b.invite_id)
             const inviteData = []
             for (let i = 0; i < allData.length; i++) {
                 if (i === 0) {
