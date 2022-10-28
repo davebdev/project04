@@ -51,7 +51,44 @@ const ManageGuests = (props) => {
         }
 
         const deleteRow = (e, id) => {
-            console.log(id)
+            axios.delete(`/invite/${id}`)
+            .then(() => {
+                axios.get('/guest/all')
+                .then((dbRes) => {
+                    const allData = dbRes.data
+                    const inviteData = []
+                    for (let i = 0; i < allData.length; i++) {
+                        if (i === 0) {
+                            inviteData.push({
+                                id: allData[i].invite_id,
+                                guests: `${allData[i].fname} ${allData[i].lname}`,
+                                invite_status: allData[i].invite_status,
+                                logged_in_guest: allData[i].logged_in_guest,
+                                logged_in_timestamp: allData[i].logged_in_timestamp,
+                                comments: allData[i].comments
+                            })
+                        } else if (allData[i].invite_id === allData[i-1].invite_id) {
+                            inviteData.find((o, j) => {
+                                if (o.id === allData[i].invite_id) {
+                                    inviteData[j].guests = inviteData[j].guests + `, ${allData[i].fname} ${allData[i].lname}`
+                                    return true;
+                                }
+                            });
+                        } else {
+                            inviteData.push({
+                                id: allData[i].invite_id,
+                                guests: `${allData[i].fname} ${allData[i].lname}`,
+                                invite_status: allData[i].invite_status,
+                                logged_in_guest: allData[i].logged_in_guest,
+                                logged_in_timestamp: allData[i].logged_in_timestamp,
+                                comments: allData[i].comments
+                            })
+                        }
+                    }
+                    setRows(inviteData);
+                })
+            })
+            .catch(err => console.log(err))
         }
 
         const columns = [
@@ -63,6 +100,33 @@ const ManageGuests = (props) => {
               flex: 0.1,
               hideable: false,
               headerClassName: 'GuestsColumnHeader'
+          },
+          {
+            field: 'edit_invite',
+            type: 'actions',
+            headerName: 'Edit Invite',
+            headerAlign: 'left',
+            align: 'left',
+            flex: 0.1,
+            editable: false,
+            cellClassName: 'actions',
+            getActions: ({ id }) => {
+              return [
+                <GridActionsCellItem
+                  icon={<i className="fa-light fa-pen-to-square"></i>}
+                  label="Edit"
+                  onClick={(e) => redirectToEdit(e, id)}
+                  color="inherit"
+                />,
+                <GridActionsCellItem
+                  icon={<i className="fa-light fa-trash"></i>}
+                  label="Delete"
+                  onClick={(e) => deleteRow(e, id)}
+                  color="inherit"
+                />,
+              ];
+            },
+            headerClassName: 'GuestsColumnHeader'
           },
             {
               field: 'guests',
@@ -108,35 +172,8 @@ const ManageGuests = (props) => {
               headerName: 'Comments',
               headerAlign: 'left',
               align: 'left',
-              flex: 0.3,
+              flex: 0.4,
               editable: false,
-              headerClassName: 'GuestsColumnHeader'
-            },
-            {
-              field: 'edit_invite',
-              type: 'actions',
-              headerName: 'Edit Invite',
-              headerAlign: 'left',
-              align: 'left',
-              width: 150,
-              editable: false,
-              cellClassName: 'actions',
-              getActions: ({ id }) => {
-                return [
-                  <GridActionsCellItem
-                    icon={<i className="fa-light fa-pen-to-square"></i>}
-                    label="Edit"
-                    onClick={(e) => redirectToEdit(e, id)}
-                    color="inherit"
-                  />,
-                  <GridActionsCellItem
-                    icon={<i className="fa-light fa-trash"></i>}
-                    label="Delete"
-                    onClick={(e) => deleteRow(e, id)}
-                    color="inherit"
-                  />,
-                ];
-              },
               headerClassName: 'GuestsColumnHeader'
             },
           ];

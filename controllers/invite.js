@@ -90,4 +90,30 @@ router.patch('/comment', (request, response) => {
     .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
 })
 
+router.delete("/:id", (request, response) => {
+    const sid = request.sessionID;
+    const invite_id = request.params.id;
+    Session.checkSessionMatches(sid)
+    .then(dbRes => {
+        if (dbRes.rowCount === 0) {
+            return response.status(401).json({errorMessage: "You are currently not logged in. Please login to view this page."})
+        } else {
+            const user = request.session.user;
+            const expiryDate = new Date(dbRes.rows[0].expire);
+            const currentDate = new Date();
+            if (expiryDate.getTime() > currentDate.getTime()) {
+                if (user === 'guest') {
+                    return response.status(400).json({ errorMessage: "User currently logged in as Guest. User must be an admin to view this page."})
+                } else if (user === 'admin') {
+
+                    Invite.deleteInvite(invite_id)
+                    .then(dbRes => response.status(200).json({infoMessage: "Invite deleted"}))
+                    .catch(err => console.log(err));
+                }
+            }
+        }
+    })
+    .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));
+})
+
 module.exports = router;

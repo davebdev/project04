@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, GridToolbar, GridRowModes, GridToolbarContainer, GridActionsCellItem, GridCellParams } from '@mui/x-data-grid';
 import './AdminInvite.css';
-import { Input, InputLabel, Button, Box, TextField } from '@mui/material';
+import { Input, InputLabel, Button, Box, TextField, OutlinedInput, FormControl } from '@mui/material';
 
 import PropTypes from 'prop-types';
 
@@ -156,6 +156,49 @@ const AdminInvite = (props) => {
             headerClassName: 'GuestsColumnHeader'
           },
           {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Actions',
+            width: 100,
+            cellClassName: 'actions',
+            getActions: ({ id }) => {
+              const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+              if (isInEditMode) {
+                return [
+                  <GridActionsCellItem
+                    icon={<i className='fa-light fa-floppy-disk'></i>}
+                    label="Save"
+                    onClick={handleSaveClick(id)}
+                  />,
+                  <GridActionsCellItem
+                    icon={<i className="fa-light fa-ban"></i>}
+                    label="Cancel"
+                    className="textPrimary"
+                    onClick={handleCancelClick(id)}
+                    color="inherit"
+                  />,
+                ];
+              }
+
+              return [
+                <GridActionsCellItem
+                  icon={<i className="fa-light fa-pen-to-square"></i>}
+                  label="Edit"
+                  className="textPrimary"
+                  onClick={handleEditClick(id)}
+                  color="inherit"
+                />,
+                <GridActionsCellItem
+                  icon={<i className="fa-light fa-trash"></i>}
+                  label="Delete"
+                  onClick={handleDeleteClick(id)}
+                  color="inherit"
+                />,
+              ];
+            },
+          },
+          {
             field: 'fname',
             headerName: 'First name',
             headerAlign: 'left',
@@ -207,49 +250,6 @@ const AdminInvite = (props) => {
             width: 300,
             editable: true,
             headerClassName: 'GuestsColumnHeader'
-          },
-          {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Actions',
-            width: 100,
-            cellClassName: 'actions',
-            getActions: ({ id }) => {
-              const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-              if (isInEditMode) {
-                return [
-                  <GridActionsCellItem
-                    icon={<i className='fa-light fa-floppy-disk'></i>}
-                    label="Save"
-                    onClick={handleSaveClick(id)}
-                  />,
-                  <GridActionsCellItem
-                    icon={<i className="fa-light fa-ban"></i>}
-                    label="Cancel"
-                    className="textPrimary"
-                    onClick={handleCancelClick(id)}
-                    color="inherit"
-                  />,
-                ];
-              }
-
-              return [
-                <GridActionsCellItem
-                  icon={<i className="fa-light fa-pen-to-square"></i>}
-                  label="Edit"
-                  className="textPrimary"
-                  onClick={handleEditClick(id)}
-                  color="inherit"
-                />,
-                <GridActionsCellItem
-                  icon={<i className="fa-light fa-trash"></i>}
-                  label="Delete"
-                  onClick={handleDeleteClick(id)}
-                  color="inherit"
-                />,
-              ];
-            },
           },
         ];
 
@@ -308,10 +308,49 @@ const AdminInvite = (props) => {
                 }}
                 >
                     <div className='InviteDetails' style={{ flexGrow: 1 , padding: '10px'}}>
-                        <TextField margin="dense" className='inviteField' variant="outlined" inputProps={ariaLabel} id="invite-status" disabled placeholder='(null)' label='Invite status' value={inviteDetails.invite_status === null ? '' : inviteDetails.invite_status}/>
-                        <TextField margin="dense" className='inviteField' variant="outlined" inputProps={ariaLabel} id="logged-in-timestamp" disabled placeholder='(never)' label='Last logged in' value={inviteDetails.logged_in_timestamp === null ? '' : inviteDetails.logged_in_timestamp}/>
-                        <TextField margin="dense" className='inviteField' variant="outlined" inputProps={ariaLabel} id="logged-in-guest" disabled placeholder='(null)' label='By' value={inviteDetails.logged_in_guest === null ? '' : inviteDetails.logged_in_guest}/>
-                        <TextField margin="dense" className='inviteField' variant="outlined" inputProps={ariaLabel} id="comments" disabled multiline={true} rows='4' fullWidth={true} placeholder='(none)' label='Comments' value={inviteDetails.comments === null ? '' : inviteDetails.comments}/>
+                    <FormControl variant="filled">
+                    <InputLabel htmlFor="invite-status">Invite status</InputLabel>
+                        <OutlinedInput
+                        margin="none"
+                        className='inviteField'
+                        inputProps={ariaLabel}
+                        id="invite-status"
+                        disabled
+                        defaultValue={inviteDetails.invite_status === null ? '' : inviteDetails.invite_status}/>
+                    </FormControl>
+                    <FormControl variant="filled">
+                        <InputLabel htmlFor="logged-in-timestamp">Last logged in</InputLabel>
+                        <OutlinedInput
+                        margin="normal"
+                        className='inviteField'
+                        inputProps={ariaLabel}
+                        id="logged-in-timestamp"
+                        disabled
+                        defaultValue={inviteDetails.logged_in_timestamp === null ? '' : inviteDetails.logged_in_timestamp}/>
+                    </FormControl>
+                    <FormControl variant="filled">
+                        <InputLabel htmlFor="logged-in-guest">By</InputLabel>
+                        <OutlinedInput
+                        margin="normal"
+                        className='inviteField'
+                        inputProps={ariaLabel}
+                        id="logged-in-guest"
+                        disabled
+                        defaultValue={inviteDetails.logged_in_guest === null ? '' : inviteDetails.logged_in_guest}/>
+                    </FormControl>
+                    <FormControl variant="filled">
+                        <InputLabel htmlFor="comments">Comments</InputLabel>
+                        <OutlinedInput
+                        margin="normal"
+                        className='inviteField'
+                        inputProps={ariaLabel}
+                        id="comments"
+                        disabled
+                        multiline={true}
+                        rows='4'
+                        fullWidth={true}
+                        defaultValue={inviteDetails.comments === null ? '' : inviteDetails.comments}/>
+                    </FormControl>
                     </div>
                 </Box>
         </div>

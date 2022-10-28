@@ -18,6 +18,12 @@ const Invite  = {
         WHERE id=$2;`;
         return db.query(sql, [data.comments, data.invite_id])
         .then(dbRes => dbRes)
+    },
+    deleteInvite: (invite_id) => {
+        const sql = `DELETE FROM invites
+        WHERE id=$1;`;
+        return db.query(sql, [invite_id])
+        .then(dbRes => dbRes)
     }
 }
 

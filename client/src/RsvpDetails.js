@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import "./Rsvp.css";
 import axios from "axios";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, TextField } from '@mui/material';
+import { Snackbar, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, TextField } from '@mui/material';
 import { DataGrid, GridToolbar, GridRowModes, GridToolbarContainer, GridActionsCellItem, GridCellParams, useGridApiContext, useGridApiEventHandler } from '@mui/x-data-grid';
+import MuiAlert from '@mui/material/Alert';
+
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -53,7 +55,19 @@ const RsvpDetails = (props) => {
     const [rows, setRows] = useState(guestArr);
     const [rowModesModel, setRowModesModel] = useState({});
     const [update, setUpdate] = useState(false);
+    const [snackOpen, setSnackOpen] = useState(false);
 
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+
+      setSnackOpen(false);
+    };
+
+    const Alert = forwardRef(function Alert(props, ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+      });
 
     const forceUpdate = () => {
         setUpdate(!update);
@@ -139,6 +153,7 @@ const RsvpDetails = (props) => {
           const handleSaveClick = (id) => (e) => {
             setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
             console.log(`handleSaveClick (id): ${id}`);
+            setSnackOpen(true);
           };
 
           const handleCancelClick = (id) => () => {
@@ -322,6 +337,11 @@ const RsvpDetails = (props) => {
                     </Box>
                 </div>
             </ThemeProvider>
+            <Snackbar snackOpen={snackOpen} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                        This is a success message!
+                        </Alert>
+                    </Snackbar>
         </div>
         )
 }
