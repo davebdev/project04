@@ -28,18 +28,18 @@ const GuestNav = (props) => {
             name: 'On The Day',
             public: false
           },
-          {
-            name: 'Travel & Accomm',
-            public: false
-          },
-          {
-            name: 'FAQs',
-            public: false
-          },
-          {
-            name: 'Gift Registry',
-            public: false
-          },
+        //   {
+        //     name: 'Travel & Accomm',
+        //     public: false
+        //   },
+        //   {
+        //     name: 'FAQs',
+        //     public: false
+        //   },
+        //   {
+        //     name: 'Gift Registry',
+        //     public: false
+        //   },
           {
             name: 'Logout',
             public: false

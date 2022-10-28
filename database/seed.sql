@@ -6,7 +6,8 @@
 TRUNCATE admins restart identity cascade;
 INSERT INTO admins(email, password, fname, lname) VALUES
 ('davidpaulbuckley@gmail.com', '$2b$10$MpJ6/6Zp/zGWhsJJfI3vbOOZB7gQuehjMdeelyRTK4yLoxsR6V306', 'Dave', 'Buckley'),
-('tysondonnelly@gmail.com', '$2b$10$FbO8/bULrdH.OL1Hc8U3d.F4Mg88Qvahrmj0YUMe2PoIYRH4KQFPa', 'Tyson', 'Donnelly');
+('tysondonnelly@gmail.com', '$2b$10$FbO8/bULrdH.OL1Hc8U3d.F4Mg88Qvahrmj0YUMe2PoIYRH4KQFPa', 'Tyson', 'Donnelly'),
+('user@ga.com', '$2b$10$8ngOP5S1JmvrLNZ/StP6JeC0N06kFBhOtqGO4BVuy5riQ1rhVtvHK', 'Test', 'User');
 
 TRUNCATE invites restart identity cascade;
 INSERT INTO invites(logged_in_timestamp, logged_in_guest, comments) VALUES

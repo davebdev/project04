@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { isValidPassword } = require('../util/hash');
+const { isValidPassword, generateHash } = require('../util/hash');
 const Admin = require('../models/admin');
 const Session = require('../models/session');
 
