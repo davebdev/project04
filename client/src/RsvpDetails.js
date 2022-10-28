@@ -4,9 +4,10 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { Snackbar, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, TextField } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, TextField } from '@mui/material';
 import { DataGrid, GridToolbar, GridRowModes, GridToolbarContainer, GridActionsCellItem, GridCellParams, useGridApiContext, useGridApiEventHandler } from '@mui/x-data-grid';
 import MuiAlert from '@mui/material/Alert';
+import SnackBar from './SnackBar';
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -49,6 +50,8 @@ const BootstrapDialogTitle = (props) => {
     onClose: PropTypes.func.isRequired,
   };
 
+
+
 const RsvpDetails = (props) => {
     const { guestArr, setGuestArr, rsvpAcknowledgement, setRsvpAcknowledgement, mainTheme } = props;
     const [invitationOpen, setInvitationOpen] = useState(true);
@@ -56,18 +59,6 @@ const RsvpDetails = (props) => {
     const [rowModesModel, setRowModesModel] = useState({});
     const [update, setUpdate] = useState(false);
     const [snackOpen, setSnackOpen] = useState(false);
-
-    const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-
-      setSnackOpen(false);
-    };
-
-    const Alert = forwardRef(function Alert(props, ref) {
-        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-      });
 
     const forceUpdate = () => {
         setUpdate(!update);
@@ -127,167 +118,167 @@ const RsvpDetails = (props) => {
         )
     }
 
-        let invite = {}
-        if (guestArr) {
-            invite.invite_id = guestArr[0].invite_id;
-            invite.comments = guestArr[0].comments;
-        }
+    let invite = {}
+    if (guestArr) {
+        invite.invite_id = guestArr[0].invite_id;
+        invite.comments = guestArr[0].comments;
+    }
 
 
-        const handleRowEditStart = (params, event) => {
-            event.defaultMuiPrevented = true;
-            console.log("handleRowEditStart params: ", params);
-          };
+    const handleRowEditStart = (params, event) => {
+        event.defaultMuiPrevented = true;
+        console.log("handleRowEditStart params: ", params);
+    };
 
-          const handleRowEditStop = (params, event) => {
-            event.defaultMuiPrevented = true;
-            console.log("handleRowEditStop params: ", params);
-            console.log("handleRowEditStop event: ", event);
-          };
+    const handleRowEditStop = (params, event) => {
+        event.defaultMuiPrevented = true;
+        console.log("handleRowEditStop params: ", params);
+        console.log("handleRowEditStop event: ", event);
+    };
 
-          const handleEditClick = (id) => () => {
-            setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-            console.log(`handleEditClick (id): ${id}`);
-          };
+    const handleEditClick = (id) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+        console.log(`handleEditClick (id): ${id}`);
+    };
 
-          const handleSaveClick = (id) => (e) => {
-            setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-            console.log(`handleSaveClick (id): ${id}`);
-            setSnackOpen(true);
-          };
+    const handleSaveClick = (id) => (e) => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+        console.log(`handleSaveClick (id): ${id}`);
+    };
 
-          const handleCancelClick = (id) => () => {
-                setRowModesModel({
-                    ...rowModesModel,
-                    [id]: { mode: GridRowModes.View, ignoreModifications: true },
-                  });
-                  console.log(`handleCancelClick (id): ${id}`);
-          };
+    const handleCancelClick = (id) => () => {
+        setRowModesModel({
+            ...rowModesModel,
+            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+            });
+        console.log(`handleCancelClick (id): ${id}`);
+    };
 
 
-          const processRowUpdate = (newRow) => {
-            axios.put("/guest", newRow)
-            .then(dbRes => dbRes);
-            const updatedRow = { ...newRow, isNew: false };
-            setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-            return updatedRow;
-          };
+    const processRowUpdate = (newRow) => {
+        axios.put("/guest", newRow)
+        .then(dbRes => dbRes);
+        const updatedRow = { ...newRow, isNew: false };
+        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+        return updatedRow;
+    };
 
-          const columns = [
-              {
-                field: 'fname',
-                headerName: 'First name',
-                headerAlign: 'left',
-                align: 'left',
-                flex: 0.1,
-                minWidth: 50,
-                editable: false,
-                headerClassName: 'GuestsColumnHeader'
-              },
-              {
-                field: 'lname',
-                headerName: 'Last name',
-                headerAlign: 'left',
-                align: 'left',
-                flex: 0.1,
-                editable: false,
-                headerClassName: 'GuestsColumnHeader'
-              },
-              {
-                field: 'email',
-                headerName: 'Email',
-                headerAlign: 'left',
-                align: 'left',
-                flex: 0.2,
-                editable: false,
-                headerClassName: 'GuestsColumnHeader'
-              },
-              {
-                field: 'rsvp',
-                type: 'singleSelect',
-                valueOptions: [{ value: 'Yes', label: 'Yes' }, { value: 'Yes Pending', label: 'Yes - Pending circumstances' }, { value: 'No', label: 'No' }],
-                headerName: 'RSVP',
-                headerAlign: 'left',
-                align: 'left',
-                flex: 0.2,
-                editable: true,
-              },
-              {
-                field: 'age_bracket',
-                type: 'singleSelect',
-                valueOptions: [{ value: 'A', label: 'Adult' }, { value: 'T', label: 'Teen (U18)' }, { value: 'C', label: 'Child (U12)' }],
-                headerName: 'Age Bracket',
-                headerAlign: 'left',
-                align: 'left',
-                flex: 0.1,
-                editable: true,
-                headerClassName: 'GuestsColumnHeader'
-              },
-              {
-                field: 'dietary_reqs',
-                headerName: 'Dietary Requirements',
-                headerAlign: 'left',
-                align: 'left',
-                flex: 0.3,
-                editable: true,
-                headerClassName: 'GuestsColumnHeader'
-              },
-              {
-                field: 'actions',
-                type: 'actions',
-                headerName: 'Edit',
-                width: 100,
-                cellClassName: 'actions',
-                getActions: ({ id }) => {
-                  const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+    const columns = [
+        {
+        field: 'fname',
+        headerName: 'First name',
+        headerAlign: 'left',
+        align: 'left',
+        flex: 0.1,
+        minWidth: 50,
+        editable: false,
+        headerClassName: 'GuestsColumnHeader'
+        },
+        {
+        field: 'lname',
+        headerName: 'Last name',
+        headerAlign: 'left',
+        align: 'left',
+        flex: 0.1,
+        editable: false,
+        headerClassName: 'GuestsColumnHeader'
+        },
+        {
+        field: 'email',
+        headerName: 'Email',
+        headerAlign: 'left',
+        align: 'left',
+        flex: 0.2,
+        editable: false,
+        headerClassName: 'GuestsColumnHeader'
+        },
+        {
+        field: 'rsvp',
+        type: 'singleSelect',
+        valueOptions: [{ value: 'Yes', label: 'Yes' }, { value: 'Yes Pending', label: 'Yes - Pending circumstances' }, { value: 'No', label: 'No' }],
+        headerName: 'RSVP',
+        headerAlign: 'left',
+        align: 'left',
+        flex: 0.2,
+        editable: true,
+        },
+        {
+        field: 'age_bracket',
+        type: 'singleSelect',
+        valueOptions: [{ value: 'A', label: 'Adult' }, { value: 'T', label: 'Teen (U18)' }, { value: 'C', label: 'Child (U12)' }],
+        headerName: 'Age Bracket',
+        headerAlign: 'left',
+        align: 'left',
+        flex: 0.1,
+        editable: true,
+        headerClassName: 'GuestsColumnHeader'
+        },
+        {
+        field: 'dietary_reqs',
+        headerName: 'Dietary Requirements',
+        headerAlign: 'left',
+        align: 'left',
+        flex: 0.3,
+        editable: true,
+        headerClassName: 'GuestsColumnHeader'
+        },
+        {
+        field: 'actions',
+        type: 'actions',
+        headerName: 'Edit',
+        width: 100,
+        cellClassName: 'actions',
+        getActions: ({ id }) => {
+            const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
-                  if (isInEditMode) {
-                    return [
-                      <GridActionsCellItem
-                        icon={<i className='fa-light fa-floppy-disk'></i>}
-                        label="Save"
-                        onClick={handleSaveClick(id)}
-                      />,
-                      <GridActionsCellItem
-                        icon={<i className="fa-light fa-ban"></i>}
-                        label="Cancel"
-                        className="textPrimary"
-                        onClick={handleCancelClick(id)}
-                        color="inherit"
-                      />,
-                    ];
-                  }
-
-                  return [
-                    <GridActionsCellItem
-                      icon={<i className="fa-light fa-pen-to-square"></i>}
-                      label="Edit"
-                      className="textPrimary"
-                      onClick={handleEditClick(id)}
-                      color="inherit"
-                    />,
-                  ];
-                },
-              },
+            if (isInEditMode) {
+            return [
+                <GridActionsCellItem
+                icon={<i className='fa-light fa-floppy-disk'></i>}
+                label="Save"
+                onClick={handleSaveClick(id)}
+                />,
+                <GridActionsCellItem
+                icon={<i className="fa-light fa-ban"></i>}
+                label="Cancel"
+                className="textPrimary"
+                onClick={handleCancelClick(id)}
+                color="inherit"
+                />,
             ];
-
-            const handleForm = (e) => {
-                e.preventDefault();
-                const form = new FormData(e.target);
-
-                const data = {
-                    invite_id: invite.invite_id,
-                    comments: form.get('comments')
-                }
-                console.log(data);
-                axios.patch('/invite/comment', data)
-                .then(dbRes => {
-                    console.log('update successful');
-                    forceUpdate();
-                })
-                .catch(err => console.log(err))
-
             }
+
+            return [
+            <GridActionsCellItem
+                icon={<i className="fa-light fa-pen-to-square"></i>}
+                label="Edit"
+                className="textPrimary"
+                onClick={handleEditClick(id)}
+                color="inherit"
+            />,
+            ];
+        },
+        },
+    ];
+
+    const handleForm = (e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+
+        const data = {
+            invite_id: invite.invite_id,
+            comments: form.get('comments')
+        }
+        console.log(data);
+        axios.patch('/invite/comment', data)
+        .then(dbRes => {
+            console.log('update successful');
+            forceUpdate();
+            setSnackOpen(true);
+        })
+        .catch(err => console.log(err))
+
+    }
 
     useEffect(() => {
         axios.get('/guest')
@@ -296,54 +287,50 @@ const RsvpDetails = (props) => {
         })
     }, [rowModesModel, rsvpAcknowledgement, rows])
 
-        return (
-        <div className="Rsvp">
-            <ThemeProvider theme={mainTheme}>
-                <InvitationModal />
-            </ThemeProvider>
-            <ThemeProvider theme={mainTheme}>
-                <div className="rsvpContent">
-                    <Box className="GuestGrid" sx={{height: '40vh', width: '100%', display: 'flex'}}>
-                        <div style={{ flexGrow: 1 }}>
-                            <DataGrid
-                            experimentalFeatures={{ newEditingApi: true }}
-                            rows={rows}
-                            columns={columns}
-                            editMode="row"
-                            rowModesModel={rowModesModel}
-                            onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
-                            onRowEditStart={handleRowEditStart}
-                            onRowEditStop={handleRowEditStop}
-                            processRowUpdate={processRowUpdate}
-                            onProcessRowUpdateError={(error) => console.log(error)}
-                            pageSize={3}
-                            rowsPerPageOptions={[3]}
-                            checkboxSelection={false}
-                            disableSelectionOnClick
-                            sx={{ backgroundColor: '#F3f3f3'}}
-                            />
-                        </div>
-                    </Box>
-                    <Box component='form' className="InviteComments" onSubmit={handleForm} sx={{ padding: '10px', backgroundColor: '#F3f3f3', borderRadius: '5px', m: '20px 0', height: 'fit-content' }}>
-                        <TextField
-                        id="comments"
-                        label="Comments"
-                        name="comments"
-                        multiline
-                        maxRows={5}
-                        defaultValue={invite.comments}
+    return (
+    <div className="Rsvp">
+        <ThemeProvider theme={mainTheme}>
+            <InvitationModal />
+        </ThemeProvider>
+        <ThemeProvider theme={mainTheme}>
+            <div className="rsvpContent">
+                <Box className="GuestGrid" sx={{height: '40vh', width: '100%', display: 'flex'}}>
+                    <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                        experimentalFeatures={{ newEditingApi: true }}
+                        rows={rows}
+                        columns={columns}
+                        editMode="row"
+                        rowModesModel={rowModesModel}
+                        onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
+                        onRowEditStart={handleRowEditStart}
+                        onRowEditStop={handleRowEditStop}
+                        processRowUpdate={processRowUpdate}
+                        onProcessRowUpdateError={(error) => console.log(error)}
+                        pageSize={3}
+                        rowsPerPageOptions={[3]}
+                        checkboxSelection={false}
+                        disableSelectionOnClick
+                        sx={{ backgroundColor: '#F3f3f3'}}
                         />
-                        <Button sx={{ m: '10px 0' }} variant="contained" type="submit">Save</Button>
-                    </Box>
-                </div>
-            </ThemeProvider>
-            <Snackbar snackOpen={snackOpen} autoHideDuration={6000} onClose={handleClose}>
-                        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                        This is a success message!
-                        </Alert>
-                    </Snackbar>
-        </div>
-        )
+                    </div>
+                </Box>
+                <Box component='form' className="InviteComments" onSubmit={handleForm} sx={{ padding: '10px', backgroundColor: '#F3f3f3', borderRadius: '5px', m: '20px 0', height: 'fit-content' }}>
+                    <TextField
+                    id="comments"
+                    label="Comments"
+                    name="comments"
+                    multiline
+                    maxRows={5}
+                    defaultValue={invite.comments}
+                    />
+                    <Button sx={{ m: '10px 0' }} variant="contained" type="submit">Save</Button>
+                </Box>
+            </div>
+        <SnackBar snackOpen={snackOpen} setSnackOpen={setSnackOpen} message='Comment saved'/>
+        </ThemeProvider>
+    </div>
+    )
 }
 
 export default RsvpDetails;
