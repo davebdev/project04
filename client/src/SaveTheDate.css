@@ -1,7 +1,10 @@
 /* Neon code from here: https://css-tricks.com/how-to-create-neon-text-with-css/ */
-.pinkNeon {
+.Neonderthaw {
     font-family: 'Neonderthaw', cursive;
     font-size: 10vh;
+}
+
+.pinkNeon {
     color: #fff;
     text-shadow:
       0 0 7px #fff,
@@ -16,8 +19,13 @@
 
 .SaveTheDate {
     grid-column: 1 / 8;
+    font-family: 'Roboto Flex', sans-serif;
     text-align: center;
     color: white;
+    background-image: url('https://images.unsplash.com/photo-1513438205128-16af16280739');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .FbImage {

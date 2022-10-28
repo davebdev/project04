@@ -69,7 +69,7 @@ const relationshipEvents = [
 const SaveTheDate = () => {
     return (
     <div className="SaveTheDate">
-    <p className="pinkNeon"><i className="fa-thin fa-rings-wedding fa-2xs"></i> Save the date!</p>
+    <p className="Neonderthaw pinkNeon">Save the date!</p>
     <p></p>
     <Timeline position="alternate">
         {relationshipEvents.map((event, index) => {
@@ -78,16 +78,16 @@ const SaveTheDate = () => {
               <FbImage link={event.link} src={event.imgLink} alt={event.imgAlt} />
             </TimelineOppositeContent>
             <TimelineSeparator>
-              <TimelineConnector sx={{ height: '100px' }}/>
+              <TimelineConnector sx={{ height: '100px', color: 'white' }}/>
               <TimelineDot>
               </TimelineDot>
               <TimelineConnector sx={{ height: '200px' }}/>
             </TimelineSeparator>
             <TimelineContent sx={{ mt: 10 }}>
-              <Typography variant="h6" component="span">
+              <Typography variant="h6" component="span" className='pinkNeon' fontFamily='Rajdhani' fontSize='36px'>
                 {event.name}
               </Typography>
-              <Typography>{event.description}</Typography>
+              <Typography className='pinkNeon' fontFamily='Roboto Flex' fontWeight='100' fontSize='20px'>{event.description}</Typography>
             </TimelineContent>
           </TimelineItem>)
         })}

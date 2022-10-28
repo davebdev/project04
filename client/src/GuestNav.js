@@ -17,7 +17,7 @@ const GuestNav = (props) => {
 
         const pages = [
           {
-            name: 'Save the Date',
+            name: 'SAVE THE DATE',
             public: true
           },
           {
@@ -25,7 +25,7 @@ const GuestNav = (props) => {
             public: true
           },
           {
-            name: 'On The Day',
+            name: 'ON THE DAY',
             public: false
           },
         //   {
@@ -41,7 +41,7 @@ const GuestNav = (props) => {
         //     public: false
         //   },
           {
-            name: 'Logout',
+            name: 'LOGOUT',
             public: false
           }
       ];
@@ -53,7 +53,7 @@ const GuestNav = (props) => {
         const handleCloseNavMenu = (e) => {
             console.log(e);
             if (e.target.localName === 'p'){
-                const nav = e.target.innerHTML.toUpperCase().replace('&AMP;', '&');
+                const nav = e.target.innerHTML.replace('&AMP;', '&');
                 console.log(nav);
                 setGuestNav(nav);
             } else if (e.target.localName === 'button') {
@@ -66,8 +66,8 @@ const GuestNav = (props) => {
     return (
     <AppBar position="static" className="GuestNav">
         <Container maxWidth='lg'>
-            <Toolbar disableGutters>
-                <i className="fa-light fa-rings-wedding"></i>
+            <Toolbar disableGutters className='NavPinkNeon'>
+                <i className="fa-light fa-rings-wedding fa-2x"></i>
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                     <IconButton
                     size="large"
@@ -77,7 +77,7 @@ const GuestNav = (props) => {
                     onClick={handleOpenNavMenu}
                     color="inherit"
                     >
-                    <i className="fa-light fa-bars"></i>
+                    <i className="fa-light fa-bars NavPinkNeon"></i>
                     </IconButton>
                     <Menu
                     id="menu-appbar"
@@ -99,11 +99,11 @@ const GuestNav = (props) => {
                     >
                     {authenticated === false ? pages.filter(page => page.public === true).map((page, index) => (
                         <MenuItem key={index} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center">{page.name}</Typography>
+                        <Typography textAlign="center" className='NavPinkNeon' sx={{ m: 1, fontFamily: 'Rajdhani', fontSize: 20 }}>{page.name}</Typography>
                         </MenuItem>
                     )) : pages.map((page, index) => (
                         <MenuItem key={index} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center">{page.name}</Typography>
+                        <Typography textAlign="center" className='NavPinkNeon' sx={{ m: 1, fontFamily: 'Rajdhani', fontSize: 20 }}>{page.name}</Typography>
                         </MenuItem>
                     ))}
                     </Menu>
@@ -113,7 +113,8 @@ const GuestNav = (props) => {
                     <Button
                         key={index}
                         onClick={handleCloseNavMenu}
-                        sx={{ my: 2, color: 'white', display: 'block' }}
+                        className='NavPinkNeon'
+                        sx={{ my: 2, color: 'white', display: 'block', fontFamily: 'Rajdhani', fontSize: 26 }}
                     >
                         {page.name}
                     </Button>
@@ -121,7 +122,8 @@ const GuestNav = (props) => {
                     <Button
                         key={index}
                         onClick={handleCloseNavMenu}
-                        sx={{ my: 2, color: 'white', display: 'block' }}
+                        className='NavPinkNeon'
+                        sx={{ m: 2, color: 'white', display: 'block', fontFamily: 'Rajdhani', fontSize: 26 }}
                     >
                         {page.name}
                     </Button>
