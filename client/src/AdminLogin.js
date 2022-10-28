@@ -26,10 +26,10 @@ const AdminLogin = (props) => {
         return (
         <div className="AdminLogin">
             <h2 id="login-heading">Login</h2>
-            <form id="admin-login-form" onSubmit={login}>
-            <input id="email" name="email" type="email" placeholder="Email"/>
-            <input id="password" name="password" type="password" placeholder="Password"/>
-            <button type="submit">Login</button>
+            <form id="admin-login-form" data-testid='login-form' onSubmit={login}>
+            <input id="email" name="email" type="email" data-testid='email-input' placeholder="Email"/>
+            <input id="password" name="password" type="password" data-testid='password-input' placeholder="Password"/>
+            <button type="submit" data-testid='login-button'>Login</button>
             </form>
         </div>
     )

@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import * as React from 'react';
 import { Button, Box } from '@mui/material/';
 import './ManageGuests.css';
 import { DataGrid, GridToolbar, GridToolbarContainer, GridRowModes, GridToolbarExport, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridActionsCellItem } from '@mui/x-data-grid';
@@ -35,7 +35,7 @@ const EditToolbar = (props) => {
 
 const ManageGuests = (props) => {
     const { setAdminNav, setEditInvite, theme } = props;
-    const [rows, setRows] = useState([
+    const [rows, setRows] = React.useState([
           { comments: "-",
             guests: "-",
             id: 0,
@@ -178,7 +178,7 @@ const ManageGuests = (props) => {
             },
           ];
 
-    useEffect(() => {
+          React.useEffect(() => {
         axios.get('/guest/all')
         .then((dbRes) => {
             console.log(dbRes.data)

@@ -31,6 +31,7 @@ const Admin = () => {
     useEffect(() => {
         axios.get('admin/authenticate')
         .then(res => {
+            console.log(res)
             console.log(res.data.errorMessage)
             if (!res.data.errorMessage) {
                 setLoggedIn(true);
