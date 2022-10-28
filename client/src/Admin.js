@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import axios from 'axios';
 import AdminNav from './AdminNav';
 import ManageGuests from './ManageGuests';
+import ExportGuests from './ExportGuests';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AdminInvite from './AdminInvite';
 import AdminLogin from './AdminLogin';
@@ -31,7 +32,7 @@ const Admin = () => {
     useEffect(() => {
         axios.get('admin/authenticate')
         .then(res => {
-            console.log(res)
+            console.log()
             console.log(res.data.errorMessage)
             if (!res.data.errorMessage) {
                 setLoggedIn(true);
@@ -58,6 +59,7 @@ const Admin = () => {
                 <div className="Admin">
                     <AdminNav logout={logout} fname={userfname} lname={userlname} setAdminNav={setAdminNav} theme={theme}/>
                     {adminNav === 'MANAGE GUESTS' && <ManageGuests setAdminNav={setAdminNav} setEditInvite={setEditInvite} theme={theme}/>}
+                    {adminNav === 'EXPORT GUESTS' && <ExportGuests theme={theme}/>}
                     {adminNav === 'EDIT INVITE' && <AdminInvite setAdminNav={setAdminNav} setEditInvite={setEditInvite} editInvite={editInvite} theme={theme}/>}
                 </div>
             </ThemeProvider>

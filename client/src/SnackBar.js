@@ -2,7 +2,7 @@ import * as React from "react";
 import Snackbar from "@mui/material/Snackbar";
 
 const SnackBar = (props) => {
-  const { snackOpen, setSnackOpen, message } = props;
+  const { snackOpen, setSnackOpen, snackbarMessage } = props;
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -16,7 +16,7 @@ const SnackBar = (props) => {
         open={snackOpen}
         autoHideDuration={4000}
         onClose={handleClose}
-        message={message}
+        message={snackbarMessage}
       />
   );
 }

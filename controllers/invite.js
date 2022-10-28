@@ -82,7 +82,7 @@ router.patch('/comment', (request, response) => {
             const currentDate = new Date();
             if (expiryDate.getTime() > currentDate.getTime()) {
                 Invite.updateComments(data)
-                .then(dbRes => response.status(200).json({infoMessage: "Comments updated"}))
+                .then(dbRes => response.status(200).json({infoMessage: "Comments saved"}))
                 .catch(err => console.log(err));
             }
         }
@@ -105,7 +105,6 @@ router.delete("/:id", (request, response) => {
                 if (user === 'guest') {
                     return response.status(400).json({ errorMessage: "User currently logged in as Guest. User must be an admin to view this page."})
                 } else if (user === 'admin') {
-
                     Invite.deleteInvite(invite_id)
                     .then(dbRes => response.status(200).json({infoMessage: "Invite deleted"}))
                     .catch(err => console.log(err));

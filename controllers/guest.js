@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Session = require('../models/session');
 const Guest = require('../models/guest');
+const Invite = require('../models/invite');
 
 router.get("/authenticate", (request, response) => {
     const sid = request.sessionID;
@@ -128,7 +129,11 @@ router.post("/login", (request, response) => {
             request.session.invite_id = dbRes.rows[0].invite_id;
             request.session.guest_id = dbRes.rows[0].id;
             request.session.user = 'guest';
-            return response.json({ infoMessage: 'Successfully logged in' });
+            Invite.updateInviteLogin(email, dbRes.rows[0].invite_id)
+            .then(dbRes => {
+                return response.json({ infoMessage: 'Successfully logged in' });
+            })
+            .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }))
         }
     })
     .catch(() => response.status(500).json({ errorMessage: 'An error has occurred with our server. Please try again later or get in touch with us to resolve.' }));

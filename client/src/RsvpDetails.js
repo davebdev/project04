@@ -59,6 +59,7 @@ const RsvpDetails = (props) => {
     const [rowModesModel, setRowModesModel] = useState({});
     const [update, setUpdate] = useState(false);
     const [snackOpen, setSnackOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState(null);
 
     const forceUpdate = () => {
         setUpdate(!update);
@@ -272,9 +273,13 @@ const RsvpDetails = (props) => {
         console.log(data);
         axios.patch('/invite/comment', data)
         .then(dbRes => {
-            console.log('update successful');
-            forceUpdate();
+            if (dbRes.data.infoMessage) {
+                setSnackbarMessage(dbRes.data.infoMessage);
+            } else if (dbRes.data.errorMessage) {
+                setSnackbarMessage(dbRes.data.errorMessage);
+            }
             setSnackOpen(true);
+            forceUpdate();
         })
         .catch(err => console.log(err))
 
@@ -327,7 +332,7 @@ const RsvpDetails = (props) => {
                     <Button sx={{ m: '10px 0' }} variant="contained" type="submit">Save</Button>
                 </Box>
             </div>
-        <SnackBar snackOpen={snackOpen} setSnackOpen={setSnackOpen} message='Comment saved'/>
+        <SnackBar snackOpen={snackOpen} setSnackOpen={setSnackOpen} snackbarMessage={snackbarMessage} />
         </ThemeProvider>
     </div>
     )

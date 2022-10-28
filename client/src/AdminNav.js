@@ -24,6 +24,9 @@ const AdminNav = (props) => {
         name: 'Manage guests'
     },
     {
+        name: 'Export guests'
+    },
+    {
         name: 'Amend Event'
     },
     {

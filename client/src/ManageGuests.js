@@ -28,7 +28,6 @@ const EditToolbar = (props) => {
             <GridToolbarColumnsButton />
             <GridToolbarFilterButton />
             <GridToolbarDensitySelector />
-            <GridToolbarExport />
         </GridToolbarContainer>
     );
 }
@@ -186,13 +185,24 @@ const ManageGuests = (props) => {
             allData.sort((a,b) => a.invite_id - b.invite_id)
             const inviteData = []
             for (let i = 0; i < allData.length; i++) {
+                let htmlInputFormattedDate;
+                if (allData[i].logged_in_timestamp) {
+                    const date = new Date(allData[i].logged_in_timestamp);
+                    const month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+                    const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+                    const hour = date.getHours() < 10 ? '0' + date.getHours(): date.getHours();
+                    const min = date.getMinutes() < 10 ? '0' + date.getMinutes(): date.getMinutes();
+                    htmlInputFormattedDate = `${day}-${month}-${date.getFullYear()} ${hour}:${min}`;
+                } else {
+                    htmlInputFormattedDate = null;
+                }
                 if (i === 0) {
                     inviteData.push({
                         id: allData[i].invite_id,
                         guests: `${allData[i].fname} ${allData[i].lname}`,
                         invite_status: allData[i].invite_status,
                         logged_in_guest: allData[i].logged_in_guest,
-                        logged_in_timestamp: allData[i].logged_in_timestamp,
+                        logged_in_timestamp: htmlInputFormattedDate,
                         comments: allData[i].comments
                     })
                 } else if (allData[i].invite_id === allData[i-1].invite_id) {
@@ -208,7 +218,7 @@ const ManageGuests = (props) => {
                         guests: `${allData[i].fname} ${allData[i].lname}`,
                         invite_status: allData[i].invite_status,
                         logged_in_guest: allData[i].logged_in_guest,
-                        logged_in_timestamp: allData[i].logged_in_timestamp,
+                        logged_in_timestamp: htmlInputFormattedDate,
                         comments: allData[i].comments
                 })
             }

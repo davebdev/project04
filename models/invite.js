@@ -19,6 +19,13 @@ const Invite  = {
         return db.query(sql, [data.comments, data.invite_id])
         .then(dbRes => dbRes)
     },
+    updateInviteLogin: (email, invite_id) => {
+        const sql = `UPDATE invites
+        SET logged_in_timestamp=CURRENT_TIMESTAMP, logged_in_guest=$1
+        WHERE id=$2;`;
+        return db.query(sql, [email, invite_id])
+        .then(dbRes => dbRes)
+    },
     deleteInvite: (invite_id) => {
         const sql = `DELETE FROM invites
         WHERE id=$1;`;
