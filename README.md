@@ -6,14 +6,14 @@ So, next year (2023), my partner and I are getting married. We've been engaged f
 
 ## Login
 
-To try out the app, go to [https://wedding-mgr.herokuapp.com/](https://wedding-mgr.herokuapp.com/) and use one of the below logins.
+To try out the app, use one of the below logins:
 
-<u>Login as an admin:</u>
+<u>Login as an admin - go to [https://wedding-mgr.onrender.com/admin](https://wedding-mgr.onrender.com/admin)</u>
 
 <li><strong>Email:</strong> user@gmail.com</li>
 <li><strong>Password:</strong> test</li>
 
-<u>Login as a guest:</u>
+<u>Login as a guest - go to [https://wedding-mgr.onrender.com/](https://wedding-mgr.onrender.com/)</u>
 <li><strong>Email:</strong> guest1@gmail.com</li>
 
 
